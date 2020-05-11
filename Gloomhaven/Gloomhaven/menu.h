@@ -1,2 +1,4 @@
 #pragma once
-void menu();
+void character_amount();
+void characterANDskill();
+void map_set();

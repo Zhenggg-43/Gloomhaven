@@ -1,6 +1,6 @@
-#include"loadgame.h"
+#include"gameload.h"
 #include<iostream>
-void loadgame()
+void load_file()
 {
 	std::cout << "µL±¡¶}Åª(ÀÉ)" << std::endl;
 }
