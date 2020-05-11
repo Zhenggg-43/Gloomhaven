@@ -141,12 +141,14 @@
     <ClCompile Include="gameload.cpp" />
     <ClCompile Include="gamemanager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="menu.cpp" />
     <ClCompile Include="play_game.cpp" />
     <ClCompile Include="whether_play.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gamamanager.h" />
     <ClInclude Include="loadgame.h" />
+    <ClInclude Include="menu.h" />
     <ClInclude Include="play_game.h" />
     <ClInclude Include="whether_play.h" />
   </ItemGroup>

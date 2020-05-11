@@ -30,6 +30,9 @@
     <ClCompile Include="play_game.cpp">
       <Filter>資源檔</Filter>
     </ClCompile>
+    <ClCompile Include="menu.cpp">
+      <Filter>資源檔</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gamamanager.h">
@@ -42,6 +45,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="play_game.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="menu.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
