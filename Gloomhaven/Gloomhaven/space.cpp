@@ -18,6 +18,7 @@ bool gamemanger::gameloop()
 bool gamemanger::whether_play()
 {
 	std::string temp;
+	std::cout << "輸入play or exit" << std::endl;
 	while (1)
 	{
 		std::cin >> temp;
@@ -58,13 +59,59 @@ void gamemanger::load_character()
 	std::cout << "讀取角色檔案!!~~" << std::endl;
 	std::fstream file;
 	file.open(character_txt,std::ios::in);
-	if (file.is_open)
+	if (file.is_open())
 	{
-		character_file;
+		int temp_i = 0;
+		std::string temp_s = "";
+		file >> character_file.character_amount;
+		for (int i = 0; i < character_file.character_amount; i++)
+		{
+			file >> temp_s;
+			character_file.name.push_back(temp_s);
+			file >> temp_i;
+			character_file.hp.push_back(temp_i);
+			file >> temp_i;
+			character_file.hands_amount.push_back(temp_i);
+			file >> temp_i;
+			character_file.deck_amount.push_back(temp_i);
+			/*std::cout << character_file.name[0] << std::endl << character_file.hp[0] << " " << character_file.hands_amount[0] << std::endl << character_file.deck_amount[0] << std::endl;*/
+			character_deck temp_deck;
+			character_file.deck.push_back(temp_deck);
+			for (int j=0;j< character_file.deck_amount[i];j++)
+			{
+				std::stringstream ss;
+				std::getline(file, temp_s);
+				ss << temp_s;
+				ss >> character_file.deck[i].card_id;
+				ss >> character_file.deck[i].move_value;
+				ss >> temp_s;
+				bool upordown = true;
+				while (temp_s!="")
+				{
+					ss >> temp_i;
+					if (temp_s=="move")
+					{
+						character_file.deck[i].up_effect.card_type.push_back(Action::Move);
+					}
+					else if (temp_s == "attack")
+					{
+						character_file.deck[i].up_effect.card_type.push_back(Action::Attack);
+					}
+					else if (temp_s == "heal")
+					{
+						character_file.deck[i].up_effect.card_type.push_back(Action::Heal);
+					}
+					else if (temp_s == "shield")
+					{
+						character_file.deck[i].up_effect.card_type.push_back(Action::Shield);
+					}
+				}
+			}
+		}
 	}
 	else
 	{
-		std::cout << "openfile" << std::endl;
+		std::cout << "openfile_fail" << std::endl;
 	}
 }
 void gamemanger::load_monster()
