@@ -6,21 +6,21 @@
 #include<iostream>
 enum Action
 {
-	_t_,Move,Attack,Heal,Shield
+	_t_,Move,Attack,Heal,Shield,Range
 };
-class card_effect
+class card_skill
 {
 public:
 	std::vector <int> card_type;
 	std::vector <int> card_power;
 };
-class character_deck
+class character_card
 {
 public:
-	int card_id=0;
-	int move_value=0;
-	card_effect up_effect;
-	card_effect down_effect;
+	int card_index=0;
+	int agility=0;
+	card_skill up_effect;
+	card_skill down_effect;
 };
 
 class monster_card
@@ -41,7 +41,7 @@ public:
 	std::vector<int> hp;
 	std::vector<int> hands_amount;
 	std::vector<int> deck_amount;
-	std::vector<character_deck> deck;
+	std::vector<std::vector<character_card>> deck;
 };
 class monster_data
 {

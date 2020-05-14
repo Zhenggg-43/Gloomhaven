@@ -56,7 +56,7 @@ void gamemanger::load_file()
 }
 void gamemanger::load_character()
 {
-	std::cout << "讀取角色檔案!!~~" << std::endl;
+	std::cout << "讀取角色檔案中~~" << std::endl;
 	std::fstream file;
 	file.open(character_txt,std::ios::in);
 	if (file.is_open())
@@ -74,40 +74,86 @@ void gamemanger::load_character()
 			character_file.hands_amount.push_back(temp_i);
 			file >> temp_i;
 			character_file.deck_amount.push_back(temp_i);
-			/*std::cout << character_file.name[0] << std::endl << character_file.hp[0] << " " << character_file.hands_amount[0] << std::endl << character_file.deck_amount[0] << std::endl;*/
-			character_deck temp_deck;
+			//std::cout << character_file.name[i] << std::endl << character_file.hp[i] << " " << character_file.hands_amount[i] << std::endl << character_file.deck_amount[i] << std::endl;
+			std::vector<character_card> temp_deck;
 			character_file.deck.push_back(temp_deck);
+			character_file.deck[i].resize(character_file.deck_amount[i]);
+			file.ignore();
 			for (int j=0;j< character_file.deck_amount[i];j++)
 			{
 				std::stringstream ss;
+				ss.clear();
+				temp_s.clear();
 				std::getline(file, temp_s);
 				ss << temp_s;
-				ss >> character_file.deck[i].card_id;
-				ss >> character_file.deck[i].move_value;
+				ss >> character_file.deck[i][j].card_index;
+				ss >> character_file.deck[i][j].agility;
+				//std::cout << character_file.deck[i][j].card_index << " "<<character_file.deck[i][j].agility << " ";
 				ss >> temp_s;
-				bool upordown = true;
-				while (temp_s!="")
+				for (int k=0;temp_s!="-";k++,ss>>temp_s)
 				{
 					ss >> temp_i;
 					if (temp_s=="move")
 					{
-						character_file.deck[i].up_effect.card_type.push_back(Action::Move);
+						character_file.deck[i][j].up_effect.card_type.push_back(Action::Move);
+						character_file.deck[i][j].up_effect.card_power.push_back(temp_i);
 					}
 					else if (temp_s == "attack")
 					{
-						character_file.deck[i].up_effect.card_type.push_back(Action::Attack);
+						character_file.deck[i][j].up_effect.card_type.push_back(Action::Attack);
+						character_file.deck[i][j].up_effect.card_power.push_back(temp_i);
 					}
 					else if (temp_s == "heal")
 					{
-						character_file.deck[i].up_effect.card_type.push_back(Action::Heal);
+						character_file.deck[i][j].up_effect.card_type.push_back(Action::Heal);
+						character_file.deck[i][j].up_effect.card_power.push_back(temp_i);
 					}
 					else if (temp_s == "shield")
 					{
-						character_file.deck[i].up_effect.card_type.push_back(Action::Shield);
+						character_file.deck[i][j].up_effect.card_type.push_back(Action::Shield);
+						character_file.deck[i][j].up_effect.card_power.push_back(temp_i);
 					}
+					else if (temp_s == "range")
+					{
+						character_file.deck[i][j].up_effect.card_type.push_back(Action::Range);
+						character_file.deck[i][j].up_effect.card_power.push_back(temp_i);
+					}
+					//std::cout << character_file.deck[i][j].up_effect.card_type[k] << " " << character_file.deck[i][j].up_effect.card_power[k]<<" ";
 				}
+				for (int k=0; ss >> temp_s;k++)
+				{
+					ss >> temp_i;
+					if (temp_s == "move")
+					{
+						character_file.deck[i][j].down_effect.card_type.push_back(Action::Move);
+						character_file.deck[i][j].down_effect.card_power.push_back(temp_i);
+					}
+					else if (temp_s == "attack")
+					{
+						character_file.deck[i][j].down_effect.card_type.push_back(Action::Attack);
+						character_file.deck[i][j].down_effect.card_power.push_back(temp_i);
+					}
+					else if (temp_s == "heal")
+					{
+						character_file.deck[i][j].down_effect.card_type.push_back(Action::Heal);
+						character_file.deck[i][j].down_effect.card_power.push_back(temp_i);
+					}
+					else if (temp_s == "shield")
+					{
+						character_file.deck[i][j].down_effect.card_type.push_back(Action::Shield);
+						character_file.deck[i][j].down_effect.card_power.push_back(temp_i);
+					}
+					else if (temp_s == "range")
+					{
+						character_file.deck[i][j].down_effect.card_type.push_back(Action::Range);
+						character_file.deck[i][j].down_effect.card_power.push_back(temp_i);
+					}
+					//std::cout<< character_file.deck[i][j].down_effect.card_type[k] << " " << character_file.deck[i][j].down_effect.card_power[k]<<" ";
+				}
+				//std::cout << std::endl;
 			}
 		}
+		std::cout << "角色讀取結束" << std::endl;
 	}
 	else
 	{
