@@ -18,7 +18,7 @@
     <ClCompile Include="main.cpp">
       <Filter>資源檔</Filter>
     </ClCompile>
-    <ClCompile Include="gamemanager.cpp">
+    <ClCompile Include="space.cpp">
       <Filter>資源檔</Filter>
     </ClCompile>
   </ItemGroup>

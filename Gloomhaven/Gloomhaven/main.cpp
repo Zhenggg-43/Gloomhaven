@@ -1,5 +1,6 @@
 #include"gamamanager.h"
 int main()
 {
-	while (gameloop());
+	gamemanger game;
+	while (game.gameloop());
 }

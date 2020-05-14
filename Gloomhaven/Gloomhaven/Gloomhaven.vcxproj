@@ -138,8 +138,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="gamemanager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="space.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gamamanager.h" />
