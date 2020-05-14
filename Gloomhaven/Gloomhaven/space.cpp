@@ -56,7 +56,7 @@ void gamemanger::load_file()
 }
 void gamemanger::load_character()
 {
-	std::cout << "讀取角色檔案!!~~" << std::endl;
+	std::cout << "讀取角色檔案中~~" << std::endl;
 	std::fstream file;
 	file.open(character_txt,std::ios::in);
 	if (file.is_open())
@@ -153,6 +153,7 @@ void gamemanger::load_character()
 				//std::cout << std::endl;
 			}
 		}
+		std::cout << "角色讀取結束" << std::endl;
 	}
 	else
 	{
