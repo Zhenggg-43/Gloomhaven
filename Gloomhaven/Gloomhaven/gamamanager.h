@@ -23,6 +23,16 @@ public:
 	card_effect down_effect;
 };
 
+class monster_card
+{
+public:
+	int card_index = 0;
+	int agility = 0;
+	bool suffle_sign = 0;
+	std::vector<int>skill;
+};
+
+
 class character_data
 {
 public:
@@ -35,7 +45,16 @@ public:
 };
 class monster_data
 {
-
+public:
+	int monster_amount = 0;
+	std::vector<std::string>name;
+	std::vector<int>hp_normal;
+	std::vector<int>power_normal;
+	std::vector<int>range_normal;
+	std::vector<int>hp_elite;
+	std::vector<int>power_elite;
+	std::vector<int>range_elite;
+	std::vector<monster_card>deck;
 };
 class creature_base
 {

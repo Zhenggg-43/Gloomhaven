@@ -117,6 +117,7 @@ void gamemanger::load_character()
 void gamemanger::load_monster()
 {
 	std::cout << "Åª¨ú©Çª«ÀÉ®×" << std::endl;
+
 }
 
 
