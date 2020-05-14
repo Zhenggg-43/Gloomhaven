@@ -50,7 +50,26 @@ void gamemanger::temp_function()
 }
 void gamemanger::load_file()
 {
-	std::cout << "無情開讀(檔)" << std::endl;
+	load_character();
+	load_monster();
+}
+void gamemanger::load_character()
+{
+	std::cout << "讀取角色檔案!!~~" << std::endl;
+	std::fstream file;
+	file.open(character_txt,std::ios::in);
+	if (file.is_open)
+	{
+		character_file;
+	}
+	else
+	{
+		std::cout << "openfile" << std::endl;
+	}
+}
+void gamemanger::load_monster()
+{
+	std::cout << "讀取怪物檔案" << std::endl;
 }
 
 
