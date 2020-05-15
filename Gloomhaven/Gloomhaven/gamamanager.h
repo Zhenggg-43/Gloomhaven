@@ -75,14 +75,14 @@ public:
 	std::string name="";
 	char icon = ' ';
 	int hp = 0;
-	std::vector<int> hand;
-	std::vector<int> deadwood;
+	std::vector<int> hand;//現在手牌
+	std::vector<int> deadwood;//棄牌堆
 };
 class All_hero
 {
 public:
 	int hero_amount = 0;
-	std::vector<hero> hero_status;
+	std::vector<hero> hero_status;//角色狀態
 };
 //////////////////////////////////////////////////////////
 class creature_base
