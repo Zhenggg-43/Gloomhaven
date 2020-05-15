@@ -68,6 +68,22 @@ public:
 	std::vector<S_monster>normal;
 	std::vector<std::vector<monster_card>>deck;
 };
+//////////////////////////////////////////////////////////playingData_hero
+class hero
+{
+public:
+	std::string name="";
+	char icon = ' ';
+	int hp = 0;
+	std::vector<int> hand;
+	std::vector<int> deadwood;
+};
+class All_hero
+{
+public:
+	int hero_amount = 0;
+	std::vector<hero> hero_status;
+};
 //////////////////////////////////////////////////////////
 class creature_base
 {
@@ -98,5 +114,6 @@ private:
 	std::string monster_txt;
 	character_data character_file;
 	monster_data monster_file;
+	All_hero playingData_hero;
 };
 //建構角色與怪獸的檔案class出來

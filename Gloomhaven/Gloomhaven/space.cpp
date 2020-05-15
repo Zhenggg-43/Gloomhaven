@@ -18,7 +18,7 @@ bool gamemanger::gameloop()
 bool gamemanger::whether_play()
 {
 	std::string temp;
-	std::cout << "輸入play or exit" << std::endl;
+	std::cout << "輸入play 或是 exit" << std::endl;
 	while (1)
 	{
 		std::cin >> temp;
@@ -270,11 +270,105 @@ void gamemanger::menu()
 }
 void gamemanger::character_amount()
 {
-	std::cout << "你輸入了角色數量你真棒!!" << std::endl;
+	std::cout << "請輸入出場角色數量:" << std::endl;
+	while (std::cin >> playingData_hero.hero_amount)
+	{
+		if (playingData_hero.hero_amount >= 2 && playingData_hero.hero_amount <= 4)
+		{
+			break;
+		}
+		else
+		{
+			std::cout << "輸入錯誤請輸入2~4" << std::endl;
+		}
+	}
+	playingData_hero.hero_status.clear();
+	playingData_hero.hero_status.resize(playingData_hero.hero_amount);
+	for (int i=0;i< playingData_hero.hero_amount;i++)
+	{
+		playingData_hero.hero_status[i].icon = 'A' + i;
+	}
 }
 void gamemanger::characterANDskill()
-{//實作時丟入角色檔案class回傳角色class
-	std::cout << "你輸入了出場角色跟技能卡你真棒!!" << std::endl;
+{
+	std::cout << "輸入角色名稱與卡片:" << std::endl;
+	std::stringstream ss;
+	std::string temp_s="";
+	int temp_i=0;
+	std::vector<int> temp_i_vector;
+	ss.clear();
+	temp_i_vector.clear();
+	std::cin.ignore();
+	for (int i=0;i< playingData_hero.hero_amount;i++)
+	{
+		while (std::getline(std::cin, temp_s))
+		{
+			ss << temp_s;
+			ss >> temp_s;
+			while (ss>>temp_i)
+			{
+				temp_i_vector.push_back(temp_i);
+			}
+			bool have_char=false;
+			bool deck_amount_crrect = false;
+			bool deck_id_crrect = true;
+			for (int j=0;j< character_file.character_amount;j++)
+			{
+				if (temp_s== character_file.name[j])
+				{
+					have_char = true;
+					if (character_file.hands_amount[j] == temp_i_vector.size())
+					{
+						deck_amount_crrect = true;
+						for (int k=0;k< temp_i_vector.size();k++)
+						{
+							if (temp_i_vector[k]<0|| temp_i_vector[k]>=character_file.deck_amount[j])
+							{
+								deck_id_crrect = false;
+								break;
+							}
+						}
+						if (deck_id_crrect)
+						{
+							playingData_hero.hero_status[i].hp = character_file.hp[j];
+							playingData_hero.hero_status[i].name = temp_s;
+							playingData_hero.hero_status[i].hand = temp_i_vector;
+						}
+						else 
+						{
+							std::cout << "你輸入了此角色沒有的卡牌，請重新輸入!" << std::endl;
+						}
+					}
+					temp_i_vector.clear();
+					if (!deck_amount_crrect)
+					{
+						std::cout << "手牌數量不符合請重新輸入!" << std::endl;
+					}
+					break;
+				}
+			}
+			ss.clear();
+			if (!have_char)
+			{
+				std::cout << "角色名稱不再資料庫中~~請重新輸入!" << std::endl;
+			}
+			else if (deck_amount_crrect&& deck_id_crrect)
+			{
+				break;
+			}
+		}
+	}
+	//////////test_input
+	for (int i=0;i< playingData_hero.hero_amount;i++)
+	{
+		std::cout << playingData_hero.hero_status[i].name << "  "<< playingData_hero.hero_status[i].icon<<" "<< playingData_hero.hero_status[i].hp<<" ";
+		for (int j=0;j< playingData_hero.hero_status[i].hand.size();j++)
+		{
+			std::cout << playingData_hero.hero_status[i].hand[j] << " ";
+		}
+		std::cout << std::endl;
+	}
+	//////////
 }
 void gamemanger::map_set()
 {
