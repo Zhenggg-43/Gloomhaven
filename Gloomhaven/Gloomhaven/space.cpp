@@ -347,6 +347,7 @@ void gamemanger::characterANDskill()
 					break;
 				}
 			}
+			temp_i_vector.clear();
 			ss.clear();
 			if (!have_char)
 			{
