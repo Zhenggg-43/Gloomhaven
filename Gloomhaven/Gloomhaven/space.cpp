@@ -236,7 +236,7 @@ void gamemanger::load_monster()
 				}
 				vec_card.push_back(card_temp);
 			}
-			monster_file.deck.push_back(vec_card);
+			monster_file.All_deck.push_back(vec_card);
 			vec_card.clear();
 			//////////////////////////////////////////////////
 		}
@@ -251,8 +251,8 @@ void gamemanger::load_monster()
 		std::cout << monster_file.name[i] << ' ' << monster_file.normal[i].hp << monster_file.normal[i].power << monster_file.normal[i].range << monster_file.elite[i].hp << monster_file.elite[i].power << monster_file.elite[i].range << std::endl;
 		for (int j = 0;j < 6;j++)
 		{
-			std::cout << monster_file.deck[i][j].card_index << ' ' << monster_file.deck[i][j].agility << ' ' << monster_file.deck[i][j].suffle_sign<<std::endl;
-			for (auto k : monster_file.deck[i][j].skill)
+			std::cout << monster_file.All_deck[i][j].card_index << ' ' << monster_file.All_deck[i][j].agility << ' ' << monster_file.All_deck[i][j].suffle_sign<<std::endl;
+			for (auto k : monster_file.All_deck[i][j].skill)
 			{
 				std::cout <<"move: "<< k.type << ' ' << k.power <<' '<< k.range <<' '<< k.movement <<' '<< k.range<<std::endl;
 			}
@@ -260,13 +260,126 @@ void gamemanger::load_monster()
 		std::cout << "///////////////////////////////////\n";
 	}
 }
+void gamemanger::load_map()
+{
+	std::cout << "請選擇地圖\n";
+	std::string map_txt;
+	std::cin >> map_txt;
+	std::fstream file;
+	file.open(map_txt, std::ios::in);
+	if (file.is_open())
+	{
+		int xb_temp, yb_temp;
+		//設定XY邊界
+		file>> yb_temp >> xb_temp;
+		PlayingData_map.Y_border = yb_temp;
+		PlayingData_map.X_border = xb_temp;
+		//設定地圖
+		PlayingData_map.body = new std::string[yb_temp];
+		for (int i = 0;i < yb_temp;i++)
+		{
+				file >> PlayingData_map.body[i];
+		}
+		//////////////////////////////////////
+		for (int i = 0;i < yb_temp;i++)
+		{
+			std::cout<< PlayingData_map.body[i]<<std::endl;
+		}
+		//////////////////////////////////////
+		//設定可選起始位置
+		for (int i = 0;i < 4;i++)
+		{
+			file >> PlayingData_map.position_start[i][1] >> PlayingData_map.position_start[i][0];
+		}
+		//設定怪物資料
+		int monster_amount_temp;
+		char icon_temp = 'a';
+		file >> monster_amount_temp;
+		for (int i = 0;i < monster_amount_temp;i++)
+		{
+			std::string name_temp="";
+			monster temp_monster;
+			S_coordinate temp_coor;
+			int xtemp = 0, ytemp = 0,montype;
 
+			file >> name_temp >> xtemp >> ytemp;
+			temp_coor.x = xtemp, temp_coor.y = ytemp;
+			//type
+			for (int x = 0;x < 3;x++)
+			{
+				int null;
+				if (x == playingData_hero.hero_amount - 2)
+				{
+					file >> montype;
+				}
+				else
+				{
+					file >> null;
+				}
+			}
+
+			if (montype == 1)///////normal
+			{
+				PlayingData_monster.monster_amount++;
+
+				temp_monster.icon = icon_temp;//icon
+				for (int pos=0;pos<monster_file.monster_amount;pos++)
+				{
+					if (monster_file.name[pos] == name_temp)
+					{
+						temp_monster.ifactive = 0;
+						temp_monster.name = monster_file.name[pos];//name
+						temp_monster.hp = monster_file.normal[pos].hp;//basic data
+						temp_monster.power = monster_file.normal[pos].power;
+						temp_monster.range = monster_file.normal[pos].range;
+						temp_monster.cards = monster_file.All_deck[pos];//deck
+						break;
+					}
+				}
+				PlayingData_monster.monster_status.push_back(temp_monster);//怪物資料
+				PlayingData_map.monster_coordinate.push_back(temp_coor);//怪物座標
+			}
+			else if (montype == 2)///////elite
+			{
+				PlayingData_monster.monster_amount++;
+
+				temp_monster.icon = icon_temp;//icon
+				for (int pos = 0;pos < monster_file.monster_amount;pos++)
+				{
+					if (monster_file.name[pos] == name_temp)
+					{
+						temp_monster.ifactive = 0;
+						temp_monster.name = monster_file.name[pos];//name
+						temp_monster.hp = monster_file.elite[pos].hp;//basic data
+						temp_monster.power = monster_file.elite[pos].power;
+						temp_monster.range = monster_file.elite[pos].range;
+						temp_monster.cards = monster_file.All_deck[pos];//deck
+						break;
+					}
+				}
+				PlayingData_monster.monster_status.push_back(temp_monster);//怪物資料
+				PlayingData_map.monster_coordinate.push_back(temp_coor);//怪物座標
+			}
+
+			icon_temp++;
+		}
+	}
+	else
+	{
+		std::cout << "openfile_fail" << std::endl;
+	}
+	PlayingData_monster.monster_amount = PlayingData_monster.monster_status.size();
+	std::cout <<std::endl<< PlayingData_monster.monster_amount<<std::endl;
+
+	PlayingData_monster.printAllmonster();
+	std::cout << "你輸入了地圖你真棒!!" << std::endl;
+}
 
 void gamemanger::menu()
 {
 	character_amount();
 	characterANDskill();
-	map_set();
+	load_map();
 }
 void gamemanger::character_amount()
 {
@@ -371,14 +484,17 @@ void gamemanger::characterANDskill()
 	}
 	//////////
 }
-void gamemanger::map_set()
-{
-	std::cout << "你輸入了地圖你真棒!!" << std::endl;
-}
+
 
 
 void gamemanger::play_game()
 {
 	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
 	std::cout << "我贏了嗎??隨便啦..." << std::endl;
+
+	playingData_hero.hero_status.clear();
+	PlayingData_monster.monster_status.clear();
+	delete[] PlayingData_map.body;
+	delete[] PlayingData_map.sight;
+
 }

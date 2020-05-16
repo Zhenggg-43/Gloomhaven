@@ -1,4 +1,6 @@
 #pragma once
+#include"Map.h"
+#include"Monster.h"
 #include<string>
 #include<vector>
 #include<fstream>
@@ -24,7 +26,6 @@ public:
 	card_skill up_effect;
 	card_skill down_effect;
 };
-
 class character_data
 {
 public:
@@ -35,39 +36,7 @@ public:
 	std::vector<int> deck_amount;
 	std::vector<std::vector<character_card>> deck;
 };
-////////////////////////////////////////////////////////// monster
-struct monster_cardskill
-{
-	int type = -1;
-	int power = 0;
-	int range = 0;
-	std::string movement = "";
-};
 
-struct S_monster
-{
-	int hp;
-	int power;
-	int range;
-};
-
-class monster_card
-{
-public:
-	int card_index = 0;
-	int agility = 0;
-	bool suffle_sign = 0;
-	std::vector<monster_cardskill>skill;
-};
-class monster_data
-{
-public:
-	int monster_amount = 0;
-	std::vector<std::string>name;
-	std::vector<S_monster>elite;
-	std::vector<S_monster>normal;
-	std::vector<std::vector<monster_card>>deck;
-};
 //////////////////////////////////////////////////////////playingData_hero
 class hero
 {
@@ -84,11 +53,9 @@ public:
 	int hero_amount = 0;
 	std::vector<hero> hero_status;//角色狀態
 };
-//////////////////////////////////////////////////////////
-class creature_base
-{
 
-};
+
+
 
 class gamemanger
 {
@@ -104,7 +71,7 @@ public:
 	void menu();
 	void character_amount();
 	void characterANDskill();
-	void map_set();
+	void load_map();
 	//////////
 	void play_game();
 	//////////
@@ -115,5 +82,6 @@ private:
 	character_data character_file;
 	monster_data monster_file;
 	All_hero playingData_hero;
+	All_monster PlayingData_monster;
+	map_data PlayingData_map;
 };
-//建構角色與怪獸的檔案class出來
