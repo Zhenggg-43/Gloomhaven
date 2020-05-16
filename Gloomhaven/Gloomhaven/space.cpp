@@ -246,19 +246,19 @@ void gamemanger::load_monster()
 		std::cout << "openfile_fail" << std::endl;
 	}
 
-	for (int i = 0;i < monster_file.monster_amount;i++)
-	{
-		std::cout << monster_file.name[i] << ' ' << monster_file.normal[i].hp << monster_file.normal[i].power << monster_file.normal[i].range << monster_file.elite[i].hp << monster_file.elite[i].power << monster_file.elite[i].range << std::endl;
-		for (int j = 0;j < 6;j++)
-		{
-			std::cout << monster_file.All_deck[i][j].card_index << ' ' << monster_file.All_deck[i][j].agility << ' ' << monster_file.All_deck[i][j].suffle_sign<<std::endl;
-			for (auto k : monster_file.All_deck[i][j].skill)
-			{
-				std::cout <<"move: "<< k.type << ' ' << k.power <<' '<< k.range <<' '<< k.movement <<' '<< k.range<<std::endl;
-			}
-		}
-		std::cout << "///////////////////////////////////\n";
-	}
+	//for (int i = 0;i < monster_file.monster_amount;i++)
+	//{
+	//	std::cout << monster_file.name[i] << ' ' << monster_file.normal[i].hp << monster_file.normal[i].power << monster_file.normal[i].range << monster_file.elite[i].hp << monster_file.elite[i].power << monster_file.elite[i].range << std::endl;
+	//	for (int j = 0;j < 6;j++)
+	//	{
+	//		std::cout << monster_file.All_deck[i][j].card_index << ' ' << monster_file.All_deck[i][j].agility << ' ' << monster_file.All_deck[i][j].suffle_sign<<std::endl;
+	//		for (auto k : monster_file.All_deck[i][j].skill)
+	//		{
+	//			std::cout <<"move: "<< k.type << ' ' << k.power <<' '<< k.range <<' '<< k.movement <<' '<< k.range<<std::endl;
+	//		}
+	//	}
+	//	std::cout << "///////////////////////////////////\n";
+	//}
 }
 void gamemanger::load_map()
 {
@@ -280,12 +280,19 @@ void gamemanger::load_map()
 		{
 			file >> PlayingData_map.body[i];
 		}
-		//////////////////////////////////////
+		//初始化視野
+		PlayingData_map.sight = new bool*[yb_temp];
 		for (int i = 0;i < yb_temp;i++)
 		{
-			std::cout<< PlayingData_map.body[i]<<std::endl;
+			PlayingData_map.sight[i] = new bool[xb_temp];
 		}
-		//////////////////////////////////////
+		for (int i = 0;i < yb_temp;i++)
+		{
+			for (int j = 0;j < xb_temp;j++)
+			{
+				PlayingData_map.sight[i][j] = 0;
+			}
+		}
 		//設定可選起始位置
 		for (int i = 0;i < 4;i++)
 		{
@@ -329,7 +336,8 @@ void gamemanger::load_map()
 					{
 						temp_monster.ifactive = 0;
 						temp_monster.name = monster_file.name[pos];//name
-						temp_monster.hp = monster_file.normal[pos].hp;//basic data
+						temp_monster.hp_max = monster_file.normal[pos].hp;//basic data
+						temp_monster.hp = temp_monster.hp_max;
 						temp_monster.power = monster_file.normal[pos].power;
 						temp_monster.range = monster_file.normal[pos].range;
 						temp_monster.cards = monster_file.All_deck[pos];//deck
@@ -350,7 +358,8 @@ void gamemanger::load_map()
 					{
 						temp_monster.ifactive = 0;
 						temp_monster.name = monster_file.name[pos];//name
-						temp_monster.hp = monster_file.elite[pos].hp;//basic data
+						temp_monster.hp_max = monster_file.elite[pos].hp;//basic data
+						temp_monster.hp = temp_monster.hp_max;
 						temp_monster.power = monster_file.elite[pos].power;
 						temp_monster.range = monster_file.elite[pos].range;
 						temp_monster.cards = monster_file.All_deck[pos];//deck
@@ -369,9 +378,9 @@ void gamemanger::load_map()
 		std::cout << "openfile_fail" << std::endl;
 	}
 	PlayingData_monster.monster_amount = PlayingData_monster.monster_status.size();
-	std::cout <<std::endl<< PlayingData_monster.monster_amount<<std::endl;
 
-	PlayingData_monster.printAllmonster();
+	//std::cout <<std::endl<< PlayingData_monster.monster_amount<<std::endl;
+	//PlayingData_monster.printAllmonster();
 	std::cout << "你輸入了地圖你真棒!!" << std::endl;
 }
 
@@ -486,10 +495,17 @@ void gamemanger::characterANDskill()
 }
 
 
-
+void gamemanger::set_startpos() 
+{
+	PlayingData_map.Set_Monsterpos();
+	PlayingData_map.Set_Characterpos(playingData_hero.hero_amount);
+	PlayingData_map.Print_Sightmap();
+}
 void gamemanger::play_game()
 {
 	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
+	set_startpos();
+
 	std::cout << "我贏了嗎??隨便啦..." << std::endl;
 
 	playingData_hero.hero_status.clear();

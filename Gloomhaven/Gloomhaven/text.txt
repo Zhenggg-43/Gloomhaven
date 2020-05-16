@@ -1,0 +1,8 @@
+play
+C:\Users\zzaa3\OneDrive\桌面\Gloomhaven\Gloomhaven\Gloomhaven\Gloomhaven\character1.txt
+C:\Users\zzaa3\OneDrive\桌面\Gloomhaven\Gloomhaven\Gloomhaven\Gloomhaven\monster1.txt
+3
+brute 0 1 2 3 4 5
+brute 0 1 2 3 4 5
+brute 0 1 2 3 4 5
+C:\Users\zzaa3\OneDrive\桌面\Gloomhaven\Gloomhaven\Gloomhaven\Gloomhaven\map1.txt

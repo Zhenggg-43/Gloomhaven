@@ -74,7 +74,7 @@ public:
 	void load_map();
 	//////////
 	void play_game();
-	void set_startpos();//設定玩家與怪物進入地圖
+	void set_startpos();//設定玩家怪物進入地圖
 	void hero_turn();//玩家選擇卡牌
 	void monster_turn();//怪物抽取卡牌
 	void set_order();//依照敏捷設定順序

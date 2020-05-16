@@ -12,6 +12,12 @@ struct S_coordinate
 class map_data
 {
 public:
+	void Set_Characterpos(int);
+	void Set_Monsterpos();
+	void Set_Sight(int,int);
+	void Print_Allmap();
+	void Print_Sightmap();
+
 	int X_border, Y_border;//邊界
 	std::string *body;//地圖本體
 	bool **sight;//地圖視野

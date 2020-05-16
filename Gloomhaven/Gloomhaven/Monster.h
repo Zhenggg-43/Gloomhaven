@@ -46,7 +46,8 @@ public:
 	bool ifactive;
 	std::string name;
 	char icon;
-	int hp, power, range;
+	int hp_max, power, range;
+	int hp;
 	typedef std::vector < monster_card> Deck;
 	Deck cards;//©Çª«¥dµP
 };
