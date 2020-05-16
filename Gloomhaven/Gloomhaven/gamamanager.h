@@ -74,6 +74,20 @@ public:
 	void load_map();
 	//////////
 	void play_game();
+	void set_startpos();//設定玩家與怪物進入地圖
+	void hero_turn();//玩家選擇卡牌
+	void monster_turn();//怪物抽取卡牌
+	void set_order();//依照敏捷設定順序
+	void hero_move();//玩家移動
+	void monster_move();//敵人移動
+	void gameove();//遊戲是否結束
+
+	void takedamage();//給予傷害
+	bool visible();//確認有無目標視野
+	void check_dead_creature();//尋找死亡目標並移除
+
+	void open_door();//判斷是否開門
+	void re_sight();//開門後重新設定視野
 	//////////
 	void temp_function();
 private:

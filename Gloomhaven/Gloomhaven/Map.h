@@ -17,5 +17,5 @@ public:
 	bool **sight;//地圖視野
 	int  position_start[4][2];//可選起始位置  [y][x]
 	std::vector<S_coordinate>monster_coordinate;//怪物座標
-	std::vector<S_coordinate>character_coordinate;//腳色座標
+	std::vector<S_coordinate>character_coordinate;//角色座標
 };

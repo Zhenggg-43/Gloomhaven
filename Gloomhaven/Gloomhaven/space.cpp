@@ -278,7 +278,7 @@ void gamemanger::load_map()
 		PlayingData_map.body = new std::string[yb_temp];
 		for (int i = 0;i < yb_temp;i++)
 		{
-				file >> PlayingData_map.body[i];
+			file >> PlayingData_map.body[i];
 		}
 		//////////////////////////////////////
 		for (int i = 0;i < yb_temp;i++)
