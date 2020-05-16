@@ -26,13 +26,17 @@ void map_data::Set_Sight(int y,int x)
 		{
 			if (sight[y][x - 1] == 0)//未走訪過
 			{
-				if (body[y][x - 1] == '1' || body[y][x - 1] == '2')
+				if (body[y][x - 1] == '0')//遇到牆壁中止
 				{
-					Set_Sight(y, x - 1);
+					
 				}
 				else if (body[y][x - 1] == '3')//遇到門中止
 				{
 					sight[y][x - 1] = 1;
+				}
+				else
+				{
+					Set_Sight(y, x - 1);
 				}
 			}
 		}
@@ -40,13 +44,17 @@ void map_data::Set_Sight(int y,int x)
 		{
 			if (sight[y][x + 1] == 0)
 			{
-				if (body[y][x + 1] == '1' || body[y][x + 1] == '2')
+				if (body[y][x + 1] == '0' )
 				{
-					Set_Sight( y, x + 1);
+					
 				}
 				else if (body[y][x + 1] == '3')
 				{
 					sight[y][x + 1] = 1;
+				}
+				else
+				{
+					Set_Sight(y, x + 1);
 				}
 			}
 		}
@@ -54,13 +62,17 @@ void map_data::Set_Sight(int y,int x)
 		{
 			if (sight[y - 1][x] == 0)
 			{
-				if (body[y - 1][x] == '1' || body[y - 1][x] == '2')
+				if (body[y - 1][x] == '0')
 				{
-					Set_Sight( y - 1, x);
+
 				}
 				else if (body[y - 1][x] == '3')
 				{
 					sight[y - 1][x] = 1;
+				}
+				else
+				{
+					Set_Sight(y - 1, x);
 				}
 			}
 		}
@@ -68,13 +80,17 @@ void map_data::Set_Sight(int y,int x)
 		{
 			if (sight[y + 1][x] == 0)
 			{
-				if (body[y + 1][x] == '1' || body[y + 1][x] == '2')
+				if (body[y + 1][x] == '0' )
 				{
-					Set_Sight( y + 1, x);
+					
 				}
 				else if (body[y + 1][x] == '3')
 				{
 					sight[y + 1][x] = 1;
+				}
+				else
+				{
+					Set_Sight(y + 1, x);
 				}
 			}
 		}
@@ -230,7 +246,13 @@ void map_data::Set_Characterpos(int character_amount)
 	}
 
 }
-void map_data::Set_Monsterpos()
+void map_data::Set_Monsterpos(string icon)
 {
-
+	int pos = 0;
+	cout << endl << icon << endl;
+	for (auto monster_c : monster_coordinate)
+	{
+		body[monster_c.y][monster_c.x] = icon[pos];
+		pos++;
+	}
 }

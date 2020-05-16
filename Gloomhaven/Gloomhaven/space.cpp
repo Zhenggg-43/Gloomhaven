@@ -497,7 +497,12 @@ void gamemanger::characterANDskill()
 
 void gamemanger::set_startpos() 
 {
-	PlayingData_map.Set_Monsterpos();
+	std::string iconstr="";
+	for (auto i : PlayingData_monster.monster_status)
+	{
+		iconstr.push_back(i.icon);
+	}
+	PlayingData_map.Set_Monsterpos(iconstr);
 	PlayingData_map.Set_Characterpos(playingData_hero.hero_amount);
 	PlayingData_map.Print_Sightmap();
 }

@@ -4,7 +4,6 @@
 #include<fstream>
 #include<sstream>
 #include<iostream>
-
 struct S_coordinate
 {
 	int x = 0, y = 0;
@@ -13,7 +12,7 @@ class map_data
 {
 public:
 	void Set_Characterpos(int);
-	void Set_Monsterpos();
+	void Set_Monsterpos(std::string);
 	void Set_Sight(int,int);
 	void Print_Allmap();
 	void Print_Sightmap();
