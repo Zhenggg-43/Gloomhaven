@@ -658,35 +658,42 @@ void gamemanger::hero_turn()
 						}
 						else
 						{
-							bool moved = true;
-							for (int j = 0; j < round.canmove_icon.size(); j++)
+							if (playingData_hero.hero_status[i].action_card[0]!= playingData_hero.hero_status[i].action_card[1])
 							{
-								if (round.canmove_icon[j] == playingData_hero.hero_status[i].icon)
+								bool moved = true;
+								for (int j = 0; j < round.canmove_icon.size(); j++)
 								{
-									moved = false;
-									round.canmove_icon.erase(round.canmove_icon.begin() + j);
-									round.action_icon.push_back(playingData_hero.hero_status[i].icon);
-									for (int k=0;k<character_file.character_amount;k++)
+									if (round.canmove_icon[j] == playingData_hero.hero_status[i].icon)
 									{
-										if (playingData_hero.hero_status[i].name==character_file.name[k])
+										moved = false;
+										round.canmove_icon.erase(round.canmove_icon.begin() + j);
+										round.action_icon.push_back(playingData_hero.hero_status[i].icon);
+										for (int k = 0; k < character_file.character_amount; k++)
 										{
-											for (int l=0;l<character_file.deck_amount[k];l++)
+											if (playingData_hero.hero_status[i].name == character_file.name[k])
 											{
-												if (playingData_hero.hero_status[i].action_card[0]== character_file.deck[k][l].card_index)
+												for (int l = 0; l < character_file.deck_amount[k]; l++)
 												{
-													round.agility.push_back(character_file.deck[k][l].agility);
-													break;
+													if (playingData_hero.hero_status[i].action_card[0] == character_file.deck[k][l].card_index)
+													{
+														round.agility.push_back(character_file.deck[k][l].agility);
+														break;
+													}
 												}
+												break;
 											}
-											break;
 										}
+										break;
 									}
-									break;
+								}
+								if (moved)
+								{
+									std::cout << "此角色已經移動過了請輸入別的角色!" << std::endl;
 								}
 							}
-							if (moved)
+							else
 							{
-								std::cout << "此角色已經移動過了請輸入別的角色!" << std::endl;
+								std::cout << "你輸入了重複卡牌請重新輸入" << std::endl;
 							}
 						}
 					}
