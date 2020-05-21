@@ -396,16 +396,17 @@ void gamemanger::load_map()
 
 			icon_temp++;
 		}
+		PlayingData_monster.monster_amount = PlayingData_monster.monster_status.size();
+
+		//std::cout <<std::endl<< PlayingData_monster.monster_amount<<std::endl;
+		//PlayingData_monster.printAllmonster();
+		std::cout << "你輸入了地圖你真棒!!" << std::endl;
 	}
 	else
 	{
 		std::cout << "openfile_fail" << std::endl;
 	}
-	PlayingData_monster.monster_amount = PlayingData_monster.monster_status.size();
 
-	//std::cout <<std::endl<< PlayingData_monster.monster_amount<<std::endl;
-	PlayingData_monster.printAllmonster();
-	std::cout << "你輸入了地圖你真棒!!" << std::endl;
 }
 
 void gamemanger::menu()
@@ -526,8 +527,6 @@ void gamemanger::set_startpos()
 	{
 		iconstr.push_back(i.icon);
 	}
-	std::cout << iconstr << std::endl;
-	PlayingData_map.Print_Allmap();
 	PlayingData_map.Set_Monsterpos(iconstr);
 	PlayingData_map.Set_Characterpos(playingData_hero.hero_amount);
 	PlayingData_map.Print_Sightmap();
@@ -536,7 +535,7 @@ void gamemanger::play_game()
 {
 	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
 	set_startpos();
-	PlayingData_map.Print_Allmap();
+
 	std::cout << "我贏了嗎??隨便啦..." << std::endl;
 
 	clearPlayingdata();
