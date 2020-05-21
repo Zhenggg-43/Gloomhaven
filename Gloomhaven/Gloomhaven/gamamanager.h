@@ -46,6 +46,7 @@ public:
 	int hp = 0;
 	std::vector<int> hand;//現在手牌
 	std::vector<int> deadwood;//棄牌堆
+	int action_card[2] = {-1,-1};
 };
 class All_hero
 {
@@ -53,7 +54,6 @@ public:
 	int hero_amount = 0;
 	std::vector<hero> hero_status;//角色狀態
 };
-
 
 
 
@@ -75,12 +75,13 @@ public:
 	//////////
 	void play_game();
 	void set_startpos();//設定玩家怪物進入地圖
+	void print_round();
 	void hero_turn();//玩家選擇卡牌
 	void monster_turn();//怪物抽取卡牌
 	void set_order();//依照敏捷設定順序
 	void hero_move();//玩家移動
 	void monster_move();//敵人移動
-	void gameove();//遊戲是否結束
+	void gameover();//遊戲是否結束
 
 	void takedamage();//給予傷害
 	bool visible();//確認有無目標視野
@@ -98,4 +99,5 @@ private:
 	All_hero playingData_hero;
 	All_monster PlayingData_monster;
 	map_data PlayingData_map;
+	Round round;
 };

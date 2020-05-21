@@ -495,6 +495,18 @@ void gamemanger::characterANDskill()
 }
 
 
+void gamemanger::play_game()
+{
+	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
+	set_startpos();
+
+	std::cout << "我贏了嗎??隨便啦..." << std::endl;
+
+	
+	PlayingData_monster.monster_status.clear();
+	delete[] PlayingData_map.body;
+	delete[] PlayingData_map.sight;
+}
 void gamemanger::set_startpos() 
 {
 	std::string iconstr="";
@@ -505,17 +517,4 @@ void gamemanger::set_startpos()
 	PlayingData_map.Set_Monsterpos(iconstr);
 	PlayingData_map.Set_Characterpos(playingData_hero.hero_amount);
 	PlayingData_map.Print_Sightmap();
-}
-void gamemanger::play_game()
-{
-	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
-	set_startpos();
-
-	std::cout << "我贏了嗎??隨便啦..." << std::endl;
-
-	playingData_hero.hero_status.clear();
-	PlayingData_monster.monster_status.clear();
-	delete[] PlayingData_map.body;
-	delete[] PlayingData_map.sight;
-
 }
