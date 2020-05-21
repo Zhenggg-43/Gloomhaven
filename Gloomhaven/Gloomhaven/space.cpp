@@ -5,7 +5,6 @@ bool gamemanger::gameloop()
 	if (!whether_play())
 		return false;
 
-
 	menu();
 
 	play_game();
@@ -408,6 +407,7 @@ void gamemanger::load_map()
 	std::cout << "你輸入了地圖你真棒!!" << std::endl;
 }
 
+
 void gamemanger::menu()
 {
 	character_amount();
@@ -519,6 +519,197 @@ void gamemanger::characterANDskill()
 }
 
 
+void gamemanger::play_game()
+{
+	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
+	set_startpos();
+	PlayingData_map.Print_Allmap();
+	std::cin.ignore();
+	while (1)/////////////////1之後會改成門與怪物是否沒了
+	{
+		print_round();
+	//	std::cout << "test" << std::endl; int qqq = 0; std::cin >> qqq;
+		hero_turn();
+	}
+
+	std::cout << "我贏了嗎??隨便啦..." << std::endl;
+
+	clearPlayingdata();
+}
+void gamemanger::print_round()
+{
+	std::cout << "round " << round.round_temp++ << ":" << std::endl;
+}
+void gamemanger::hero_turn()
+{
+	std::stringstream ss;
+	std::string temp_s="";
+	int temp_i = 0;
+	//////////(每輪重製round的行動順序的資料)
+	round.canmove_icon.clear();
+	round.agility.clear();
+	round.action_icon.clear();
+	//////////
+	for (int i = 0; i < playingData_hero.hero_amount; i++)
+	{
+		round.canmove_icon.push_back(playingData_hero.hero_status[i].icon);
+	}
+	//
+	for (int i=0;i<round.canmove_icon.size();i++)
+	{
+		std::cout << round.canmove_icon[i] << " ";
+	}
+	std::cout << std::endl;
+	//
+	while (std::getline(std::cin,temp_s))
+	{
+		bool exist = false;
+		ss.str("");
+		ss.clear();
+		ss << temp_s;
+		ss >> temp_s;
+		if (temp_s.size()>1)
+		{
+			std::cout << "輸入角色名稱錯誤請重新輸入!" << std::endl;
+		}
+		else
+		{
+			for (int i = 0; i < playingData_hero.hero_amount; i++)
+			{
+				if (playingData_hero.hero_status[i].icon == temp_s[0])
+				{
+					exist = true;
+					ss >> temp_s;
+					if (temp_s == "check")//查看手牌
+					{
+						std::cout << "hand: ";
+						for (int j = 0; j < playingData_hero.hero_status[i].hand.size(); j++)
+						{
+							std::cout << playingData_hero.hero_status[i].hand[j];
+							if (!(j == playingData_hero.hero_status[i].hand.size() - 1))
+							{
+								std::cout << ", ";
+							}
+						}
+						std::cout << "; discard: ";
+						for (int j = 0; j < playingData_hero.hero_status[i].deadwood.size(); j++)
+						{
+							std::cout << playingData_hero.hero_status[i].deadwood[j];
+							if (!(j == playingData_hero.hero_status[i].deadwood.size() - 1))
+							{
+								std::cout << ", ";
+							}
+						}
+						std::cout << std::endl;
+					}
+					else if (temp_s == "-1")//選擇長休
+					{
+						if (playingData_hero.hero_status[i].deadwood.size()<2)
+						{
+							std::cout << "棄牌堆少於2此角色不能長休請重新輸入" << std::endl;
+						}
+						else
+						{
+							bool moved = true;
+							for (int j=0;j<round.canmove_icon.size();j++)
+							{
+								if (round.canmove_icon[j]== playingData_hero.hero_status[i].icon)
+								{
+									moved = false;
+									playingData_hero.hero_status[i].action_card[0] = -1;
+									round.canmove_icon.erase(round.canmove_icon.begin() + j);
+									round.action_icon.push_back(playingData_hero.hero_status[i].icon);
+									round.agility.push_back(99);
+								}
+							}
+							if (moved)
+							{
+								std::cout << "此角色已經移動過了請輸入別的角色!" << std::endl;
+							}
+						}
+					}
+					else//選擇行動的兩張手牌
+					{
+						bool havecard1=false, havecard2 = false;;
+						int temp_i=0;
+						std::stringstream temp;
+						temp << temp_s;
+						temp >> temp_i;
+						for (int j=0;j<playingData_hero.hero_status[i].hand.size();j++)
+						{
+							if (playingData_hero.hero_status[i].hand[j]==temp_i)
+							{
+								havecard1 = true;
+								playingData_hero.hero_status[i].action_card[0] = temp_i;
+							}
+						}
+						ss >> temp_i;
+						for (int j = 0; j < playingData_hero.hero_status[i].hand.size(); j++)
+						{
+							if (playingData_hero.hero_status[i].hand[j] == temp_i)
+							{
+								havecard2 = true;
+								playingData_hero.hero_status[i].action_card[1] = temp_i;
+							}
+						}
+						if (!havecard1||!havecard2)
+						{
+							std::cout << "此角色沒有你輸入的卡牌" << std::endl;
+						}
+						else
+						{
+							bool moved = true;
+							for (int j = 0; j < round.canmove_icon.size(); j++)
+							{
+								if (round.canmove_icon[j] == playingData_hero.hero_status[i].icon)
+								{
+									moved = false;
+									round.canmove_icon.erase(round.canmove_icon.begin() + j);
+									round.action_icon.push_back(playingData_hero.hero_status[i].icon);
+									for (int k=0;k<character_file.character_amount;k++)
+									{
+										if (playingData_hero.hero_status[i].name==character_file.name[k])
+										{
+											for (int l=0;l<character_file.deck_amount[k];l++)
+											{
+												if (playingData_hero.hero_status[i].action_card[0]== character_file.deck[k][l].card_index)
+												{
+													round.agility.push_back(character_file.deck[k][l].agility);
+													break;
+												}
+											}
+											break;
+										}
+									}
+									break;
+								}
+							}
+							if (moved)
+							{
+								std::cout << "此角色已經移動過了請輸入別的角色!" << std::endl;
+							}
+						}
+					}
+				}
+			}
+			if (!exist)
+			{
+				std::cout << "此角色不存在請重新輸入!" << std::endl;
+			}
+
+			if (round.canmove_icon.size()==0)
+			{
+				break;
+			}
+		}
+	}
+	//
+	for (int i=0;i<round.action_icon.size();i++)
+	{
+		std::cout << round.action_icon[i] << " " << round.agility[i] << std::endl;
+	}
+	//
+}
 void gamemanger::set_startpos() 
 {
 	std::string iconstr="";
@@ -531,15 +722,6 @@ void gamemanger::set_startpos()
 	PlayingData_map.Set_Monsterpos(iconstr);
 	PlayingData_map.Set_Characterpos(playingData_hero.hero_amount);
 	PlayingData_map.Print_Sightmap();
-}
-void gamemanger::play_game()
-{
-	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
-	set_startpos();
-	PlayingData_map.Print_Allmap();
-	std::cout << "我贏了嗎??隨便啦..." << std::endl;
-
-	clearPlayingdata();
 }
 void gamemanger::clearPlayingdata()
 {

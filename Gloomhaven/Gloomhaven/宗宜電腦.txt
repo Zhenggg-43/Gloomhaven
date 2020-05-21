@@ -1,0 +1,9 @@
+D:\作業\期末專案\Zhenggg-43\Gloomhaven\Gloomhaven\Gloomhaven\character1.txt
+D:\作業\期末專案\Zhenggg-43\Gloomhaven\Gloomhaven\Gloomhaven\monster1.txt
+0
+play
+3
+brute 0 1 2 3 4 5
+brute 0 1 2 3 4 5
+brute 0 1 2 3 4 5
+D:\作業\期末專案\Zhenggg-43\Gloomhaven\Gloomhaven\Gloomhaven\map1.txt

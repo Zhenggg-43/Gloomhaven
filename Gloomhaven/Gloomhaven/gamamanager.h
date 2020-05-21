@@ -46,13 +46,22 @@ public:
 	int hp = 0;
 	std::vector<int> hand;//現在手牌
 	std::vector<int> deadwood;//棄牌堆
-	int action_card[2] = {-1,-1};
+	int action_card[2] = {-1,-1};//如果第1張是-1代表長休不考慮第2張
 };
 class All_hero
 {
 public:
 	int hero_amount = 0;
 	std::vector<hero> hero_status;//角色狀態
+};
+//////////////////////////////////////////////////////////
+class Round
+{
+public:
+	int round_temp = 1;
+	std::vector<char> canmove_icon;
+	std::vector<char> action_icon;
+	std::vector<int> agility;
 };
 
 
@@ -104,7 +113,7 @@ private:
 	All_hero playingData_hero;
 	All_monster PlayingData_monster;
 	map_data PlayingData_map;
-	
+	Round round;
 };
 /*
 角色選牌(玩家) 指令(check {character icon} ) / 怪物選牌(active/function操作)
