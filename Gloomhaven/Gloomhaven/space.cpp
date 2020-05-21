@@ -5,7 +5,6 @@ bool gamemanger::gameloop()
 	if (!whether_play())
 		return false;
 
-	loadgame();
 
 	menu();
 
@@ -527,6 +526,8 @@ void gamemanger::set_startpos()
 	{
 		iconstr.push_back(i.icon);
 	}
+	std::cout << iconstr << std::endl;
+	PlayingData_map.Print_Allmap();
 	PlayingData_map.Set_Monsterpos(iconstr);
 	PlayingData_map.Set_Characterpos(playingData_hero.hero_amount);
 	PlayingData_map.Print_Sightmap();
@@ -538,9 +539,13 @@ void gamemanger::play_game()
 	PlayingData_map.Print_Allmap();
 	std::cout << "我贏了嗎??隨便啦..." << std::endl;
 
-	playingData_hero.hero_status.clear();
+	clearPlayingdata();
+}
+void gamemanger::clearPlayingdata()
+{
 	PlayingData_monster.monster_status.clear();
+	PlayingData_map.character_coordinate.clear();
+	PlayingData_map.monster_coordinate.clear();
 	delete[] PlayingData_map.body;
 	delete[] PlayingData_map.sight;
-
 }

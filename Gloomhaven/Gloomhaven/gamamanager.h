@@ -62,18 +62,18 @@ class gamemanger
 public:
 	bool gameloop();
 	bool whether_play();
-	//////////
+	//////////初始化
 	void loadgame();
 	void set_debugmode();
 	void load_file();
 	void load_character();
 	void load_monster();
-	//////////
+	//////////設定遊戲資料
 	void menu();
 	void character_amount();
 	void characterANDskill();
 	void load_map();
-	//////////
+	//////////遊戲流程
 	void play_game();
 	void set_startpos();//設定玩家怪物進入地圖
 	void print_round();
@@ -90,9 +90,12 @@ public:
 
 	void open_door();//判斷是否開門
 	void re_sight();//開門後重新設定視野
+
 	//////////
 	void temp_function();
 private:
+	void clearPlayingdata();
+
 	bool Flag_DebugMode=0;
 	std::string character_txt;
 	std::string monster_txt;
@@ -101,5 +104,12 @@ private:
 	All_hero playingData_hero;
 	All_monster PlayingData_monster;
 	map_data PlayingData_map;
-	Round round;
+	
 };
+/*
+角色選牌(玩家) 指令(check {character icon} ) / 怪物選牌(active/function操作)
+排序
+輪流動作 / check(角色動作時)
+判斷 角色 怪物,門
+遊戲是否結束
+*/
