@@ -40,7 +40,9 @@ bool gamemanger::whether_play()
 void gamemanger::loadgame()
 {
 	temp_function();
+	set_debugmode();
 	load_file();
+	
 }
 void gamemanger::temp_function()
 {
@@ -204,24 +206,25 @@ void gamemanger::load_monster()
 					else if (s_temp == "attack")
 					{
 						card_skill.type = Action::Attack;
-						file >> card_skill.power;
+						file >> card_skill.attack.attpower;
 						card_temp.skill.push_back(card_skill);
 					}
 					else if (s_temp == "heal")
 					{
 						card_skill.type = Action::Heal;
-						file >> card_skill.power;
+						file >> card_skill.skillpower;
 						card_temp.skill.push_back(card_skill);
 					}
 					else if (s_temp == "shield")
 					{
 						card_skill.type = Action::Shield;
-						file >> card_skill.power;
+						file >> card_skill.skillpower;
 						card_temp.skill.push_back(card_skill);
 					}
 					else if (s_temp == "range")
 					{
-						
+						card_temp.skill.back().attack.ifrange = 1;
+						file >> card_temp.skill.back().attack.range;
 					}
 					else if (s_temp == "r")
 					{
@@ -259,6 +262,28 @@ void gamemanger::load_monster()
 	//	}
 	//	std::cout << "///////////////////////////////////\n";
 	//}
+}
+void gamemanger::set_debugmode() 
+{
+	std::cout << "是否要要啟用Debug Mode (0/1)\n";
+	std::string input;
+	while (std::cin >> input)
+	{
+		if (input=="1")
+		{
+			Flag_DebugMode = 1;
+			break;
+		}
+		else if (input == "0")
+		{
+			Flag_DebugMode = 0;
+			break;
+		}
+		else
+		{
+			std::cout << "輸入錯誤!!!\n";
+		}
+	}
 }
 void gamemanger::load_map()
 {
@@ -380,7 +405,7 @@ void gamemanger::load_map()
 	PlayingData_monster.monster_amount = PlayingData_monster.monster_status.size();
 
 	//std::cout <<std::endl<< PlayingData_monster.monster_amount<<std::endl;
-	//PlayingData_monster.printAllmonster();
+	PlayingData_monster.printAllmonster();
 	std::cout << "你輸入了地圖你真棒!!" << std::endl;
 }
 
@@ -510,7 +535,7 @@ void gamemanger::play_game()
 {
 	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
 	set_startpos();
-
+	PlayingData_map.Print_Allmap();
 	std::cout << "我贏了嗎??隨便啦..." << std::endl;
 
 	playingData_hero.hero_status.clear();

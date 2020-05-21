@@ -1,4 +1,7 @@
 #include"Monster.h"
+using namespace std;
+#define attack_power attack.attpower
+#define attack_range attack.range
 enum Action
 {
 	_t_, Move, Attack, Heal, Shield, Range
@@ -16,11 +19,15 @@ void All_monster::printAllmonster()
 			{
 				if (skill.type == Action::Attack)
 				{
-					std::cout << "attack " << skill.power << ' ' << skill.range << ' ';
+					std::cout << "attack " << skill.attack_power << ' ';
+					if (skill.attack.ifrange)
+					{
+						std::cout << "range " << skill.attack_range << ' ';
+					}
 				}
 				else if (skill.type == Action::Heal)
 				{
-					std::cout << "heal " << skill.power << ' ';
+					std::cout << "heal " << skill.skillpower << ' ';
 				}
 				else if (skill.type == Action::Move)
 				{
@@ -28,7 +35,7 @@ void All_monster::printAllmonster()
 				}
 				else if (skill.type == Action::Shield)
 				{
-					std::cout << "shield " << skill.power << ' ';
+					std::cout << "shield " << skill.skillpower << ' ';
 				}
 			}
 			std::cout << card.suffle_sign << std::endl;

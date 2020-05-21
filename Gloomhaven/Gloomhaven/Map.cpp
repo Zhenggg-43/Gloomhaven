@@ -19,6 +19,13 @@ void map_data::Print_Sightmap()
 		cout << endl;
 	}
 }
+void map_data::Print_Allmap()
+{
+	for (int i = 0;i < Y_border;i++)
+	{
+		cout << this->body[i] << endl;
+	}
+}
 void map_data::Set_Sight(int y,int x)
 {
 		sight[y][x] = 1;
@@ -249,7 +256,7 @@ void map_data::Set_Characterpos(int character_amount)
 void map_data::Set_Monsterpos(string icon)
 {
 	int pos = 0;
-	cout << endl << icon << endl;
+	//cout << endl << icon << endl;
 	for (auto monster_c : monster_coordinate)
 	{
 		body[monster_c.y][monster_c.x] = icon[pos];

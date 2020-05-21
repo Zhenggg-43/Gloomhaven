@@ -64,6 +64,7 @@ public:
 	bool whether_play();
 	//////////
 	void loadgame();
+	void set_debugmode();
 	void load_file();
 	void load_character();
 	void load_monster();
@@ -91,6 +92,7 @@ public:
 	//////////
 	void temp_function();
 private:
+	bool Flag_DebugMode=0;
 	std::string character_txt;
 	std::string monster_txt;
 	character_data character_file;

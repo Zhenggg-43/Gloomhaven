@@ -6,11 +6,17 @@
 #include<iostream>
 
 //怪物基礎資料型別
+struct S_att
+{
+	bool ifrange=0;
+	int range=0;
+	int attpower=0;
+};
 struct monster_cardskill
 {
 	int type = -1;
-	int power = 0;
-	int range = 0;
+	S_att attack;
+	int skillpower = 0;
 	std::string movement = "";
 };
 struct S_monster
