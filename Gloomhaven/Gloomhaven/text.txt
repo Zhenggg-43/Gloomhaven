@@ -7,3 +7,9 @@ brute 0 1 2 3 4 5
 brute 0 1 2 3 4 5
 brute 0 1 2 3 4 5
 C:\Users\zzaa3\OneDrive\桌面\Gloomhaven\Gloomhaven\Gloomhaven\Gloomhaven\map1.txt
+w
+w
+w
+A 0 1
+B 0 1
+C 0 1

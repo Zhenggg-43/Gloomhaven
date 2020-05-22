@@ -60,12 +60,13 @@ public:
 	Deck cards;
 	std::vector<int>hand;
 	std::vector<int>discard;
-	int choosed_card;
+	int drew_card;
 };
 class All_monster
 {
 public:
 	void printAllmonster();
+	void printmonstercard(char,int);
 	monster& operator[](char);
 
 	int monster_amount = 0;

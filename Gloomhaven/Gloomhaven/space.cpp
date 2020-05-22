@@ -728,21 +728,39 @@ void gamemanger::monster_turn()
 	{
 		for (int i = 0;i < active_monster_amount;i++)
 		{
-			char icon_act = active_monster[i];
-			Monster[icon_act].choosed_card = Monster[icon_act].hand[0];
-			round.agility.push_back(Monster[icon_act].cards[Monster[icon_act].hand[0]].agility);//第一張手牌的敏捷值
-			round.action_creature_icon.push_back(icon_act);
+			//char icon_act = active_monster[i];
+			//Monster[icon_act].choosed_card = Monster[icon_act].hand[0];
+			//round.agility.push_back(Monster[icon_act].cards[Monster[icon_act].hand[0]].agility);//第一張手牌的敏捷值
+			//round.action_creature_icon.push_back(icon_act);
 		}
 	}
 	else
 	{
+		std::string str_mon;
 		for (int i = 0;i < active_monster_amount;i++)
 		{
-			char icon_act = active_monster[i];
-			round.action_creature_icon.push_back(icon_act);
+			str_mon.push_back(active_monster[i]);
+		}
+		for (int i = 0;i < str_mon.length();i++)
+		{
+			char icon_act = str_mon[i];
 			int index_card = rand() % Monster[icon_act].hand.size();//現有手牌index
-			Monster[icon_act].choosed_card = Monster[icon_act].hand[index_card];
+
+			round.action_creature_icon.push_back(icon_act);//當下pos
+			Monster[icon_act].drew_card = Monster[icon_act].hand[index_card];
 			round.agility.push_back(Monster[icon_act].cards[Monster[icon_act].hand[index_card]].agility);//隨機手牌的敏捷值
+			for (int j = i + 1;j < str_mon.length();j++)
+			{
+				if (Monster[icon_act].name == Monster[str_mon[j]].name)//同種怪物
+				{
+					round.action_creature_icon.push_back(str_mon[j]);//當下
+					Monster[str_mon[j]].drew_card = Monster[str_mon[j]].hand[index_card];
+					round.agility.push_back(Monster[str_mon[j]].cards[Monster[str_mon[j]].hand[index_card]].agility);//隨機手牌的敏捷值
+					str_mon.erase(j,j);
+					j--;
+				}
+			}
+			
 		}
 	}
 }
@@ -890,15 +908,16 @@ void gamemanger::print_drawing()//輸出行動順序
 					{
 						std::cout <<" "<< playingData_hero.hero_status[j].action_card[1];
 					}
+					std::cout << std::endl;
 					break;
 				}
 			}
 		}
 		else if (round.action_creature_icon[i] <= 'z' && round.action_creature_icon[i] >= 'a')//怪獸
 		{
-
+			Monster.printmonstercard(round.action_creature_icon[i], Monster[round.action_creature_icon[i]].drew_card);
 		}
-		std::cout << std::endl;
+		
 	}
 }
 void gamemanger::set_startpos() 
