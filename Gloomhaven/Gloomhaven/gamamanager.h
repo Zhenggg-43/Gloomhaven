@@ -8,6 +8,7 @@
 #include<iostream>
 #include<ctime>
 #include<cstdlib>
+#include <algorithm>
 enum Action
 {
 	_t_,Move,Attack,Heal,Shield,Range
@@ -62,7 +63,7 @@ class Round
 public:
 	int round_temp = 1;
 	std::vector<char> canmove_icon;
-	std::vector<char> action_icon;
+	std::vector<char> action_creature_icon;
 	std::vector<int> agility;
 };
 
@@ -91,6 +92,7 @@ public:
 	void hero_turn();//玩家選擇卡牌
 	void monster_turn();//怪物抽取卡牌
 	void set_order();//依照敏捷設定順序
+	void print_drawing();//輸出行動順序
 	void hero_action();//玩家移動
 	void monster_action();//敵人移動
 	void gameover();//遊戲是否結束

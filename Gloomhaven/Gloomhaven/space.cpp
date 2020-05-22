@@ -525,13 +525,16 @@ void gamemanger::play_game()
 {
 	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
 	set_startpos();
-	PlayingData_map.Print_Allmap();
+	set_monster_active();
 	std::cin.ignore();
 	while (1)/////////////////1之後會改成門與怪物是否沒了
 	{
 		print_round();
 	//	std::cout << "test" << std::endl; int qqq = 0; std::cin >> qqq;
 		hero_turn();
+		monster_turn();
+		set_order();
+		print_drawing();
 	}
 
 	std::cout << "我贏了嗎??隨便啦..." << std::endl;
@@ -550,18 +553,18 @@ void gamemanger::hero_turn()
 	//////////(每輪重製round的行動順序的資料)
 	round.canmove_icon.clear();
 	round.agility.clear();
-	round.action_icon.clear();
+	round.action_creature_icon.clear();
 	//////////
 	for (int i = 0; i < playingData_hero.hero_amount; i++)
 	{
 		round.canmove_icon.push_back(playingData_hero.hero_status[i].icon);
 	}
-	//
-	for (int i=0;i<round.canmove_icon.size();i++)
+	//(看CANMOVEICON有沒有問題)
+	/*for (int i=0;i<round.canmove_icon.size();i++)
 	{
 		std::cout << round.canmove_icon[i] << " ";
 	}
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 	//
 	while (std::getline(std::cin,temp_s))
 	{
@@ -620,7 +623,7 @@ void gamemanger::hero_turn()
 									moved = false;
 									playingData_hero.hero_status[i].action_card[0] = -1;
 									round.canmove_icon.erase(round.canmove_icon.begin() + j);
-									round.action_icon.push_back(playingData_hero.hero_status[i].icon);
+									round.action_creature_icon.push_back(playingData_hero.hero_status[i].icon);
 									round.agility.push_back(99);
 								}
 							}
@@ -669,7 +672,7 @@ void gamemanger::hero_turn()
 									{
 										moved = false;
 										round.canmove_icon.erase(round.canmove_icon.begin() + j);
-										round.action_icon.push_back(playingData_hero.hero_status[i].icon);
+										round.action_creature_icon.push_back(playingData_hero.hero_status[i].icon);
 										for (int k = 0; k < character_file.character_amount; k++)
 										{
 											if (playingData_hero.hero_status[i].name == character_file.name[k])
@@ -712,11 +715,11 @@ void gamemanger::hero_turn()
 			}
 		}
 	}
-	//
-	for (int i=0;i<round.action_icon.size();i++)
-	{
-		std::cout << round.action_icon[i] << " " << round.agility[i] << std::endl;
-	}
+	//(看icon與敏捷值有沒有問題)
+	//for (int i=0;i<round.action_creature_icon.size();i++)
+	//{
+	//	std::cout << round.action_icon[i] << " " << round.agility[i] << std::endl;
+	//}
 	//
 }
 void gamemanger::monster_turn()
@@ -728,7 +731,7 @@ void gamemanger::monster_turn()
 			char icon_act = active_monster[i];
 			Monster[icon_act].choosed_card = Monster[icon_act].hand[0];
 			round.agility.push_back(Monster[icon_act].cards[Monster[icon_act].hand[0]].agility);//第一張手牌的敏捷值
-			round.action_icon.push_back(icon_act);
+			round.action_creature_icon.push_back(icon_act);
 		}
 	}
 	else
@@ -736,11 +739,166 @@ void gamemanger::monster_turn()
 		for (int i = 0;i < active_monster_amount;i++)
 		{
 			char icon_act = active_monster[i];
-			round.action_icon.push_back(icon_act);
+			round.action_creature_icon.push_back(icon_act);
 			int index_card = rand() % Monster[icon_act].hand.size();//現有手牌index
 			Monster[icon_act].choosed_card = Monster[icon_act].hand[index_card];
 			round.agility.push_back(Monster[icon_act].cards[Monster[icon_act].hand[index_card]].agility);//隨機手牌的敏捷值
 		}
+	}
+}
+
+void gamemanger::set_order()//依照敏捷設定順序
+{
+	//
+	/*for (int i = 0; i < round.action_creature_icon.size(); i++)
+	{
+		std::cout << round.action_creature_icon[i] << " " << round.agility[i] << std::endl;;
+	}*/
+	//
+	std::vector<char> temp_c_1;
+	std::vector<std::vector<char>> temp_c_2;
+	temp_c_1.clear();
+	temp_c_2.clear();
+	for (int i = 0; i < round.action_creature_icon.size(); i++)
+	{
+		temp_c_1.push_back(round.agility[i]);
+		temp_c_1.push_back(round.action_creature_icon[i]);
+		temp_c_2.push_back(temp_c_1);
+		temp_c_1.clear();
+	}
+	std::sort(temp_c_2.begin(), temp_c_2.end());
+	for (int i=0; i < round.action_creature_icon.size()-1; i++)
+	{
+		for (int j = 0; j < round.action_creature_icon.size()-i-1; j++)
+		{
+			if (temp_c_2[j][0]==temp_c_2[j+1][0])
+			{
+				if ((temp_c_2[j][1]<='z'&& temp_c_2[j][1] >= 'a')&& (temp_c_2[j+1][1] <= 'Z' && temp_c_2[j+1][1] >= 'A'))
+				{
+					char temp_c=' ';
+					temp_c = temp_c_2[j][1];
+					temp_c_2[j][1] = temp_c_2[j + 1][1];
+					temp_c_2[j + 1][1] = temp_c;
+				}
+				else if ((temp_c_2[j][1] <= 'Z' && temp_c_2[j][1] >= 'A') && (temp_c_2[j + 1][1] <= 'Z' && temp_c_2[j + 1][1] >= 'A'))
+				{
+					int temp_i_1 = 0,temp_i_2=0;
+					for (int k=0;k<playingData_hero.hero_amount;k++)
+					{
+						if (temp_c_2[j][1]==playingData_hero.hero_status[k].icon)
+						{
+							for (int l = 0; l < character_file.character_amount; l++)
+							{
+								if (playingData_hero.hero_status[k].name == character_file.name[l])
+								{
+									for (int m = 0; m < character_file.deck_amount[l]; m++)
+									{
+										if (playingData_hero.hero_status[k].action_card[1] == character_file.deck[l][m].card_index)
+										{
+											temp_i_1 = character_file.deck[l][m].agility;
+											break;
+										}
+									}
+									break;
+								}
+							}
+							break;
+						}
+					}
+					for (int k = 0; k < playingData_hero.hero_amount; k++)
+					{
+						if (temp_c_2[j+1][1] == playingData_hero.hero_status[k].icon)
+						{
+							for (int l = 0; l < character_file.character_amount; l++)
+							{
+								if (playingData_hero.hero_status[k].name == character_file.name[l])
+								{
+									for (int m = 0; m < character_file.deck_amount[l]; m++)
+									{
+										if (playingData_hero.hero_status[k].action_card[1] == character_file.deck[l][m].card_index)
+										{
+											temp_i_2 = character_file.deck[l][m].agility;
+											break;
+										}
+									}
+									break;
+								}
+							}
+							break;
+						}
+					}
+					if (temp_i_1>temp_i_2)
+					{
+						char temp_c = ' ';
+						temp_c = temp_c_2[j][1];
+						temp_c_2[j][1] = temp_c_2[j + 1][1];
+						temp_c_2[j + 1][1] = temp_c;
+					}
+					else if (temp_i_1 == temp_i_2)
+					{
+						if (temp_c_2[j][1]> temp_c_2[j+1][1])
+						{
+							char temp_c = ' ';
+							temp_c = temp_c_2[j][1];
+							temp_c_2[j][1] = temp_c_2[j + 1][1];
+							temp_c_2[j + 1][1] = temp_c;
+						}
+					}
+				}
+				else if ((temp_c_2[j][1] <= 'z' && temp_c_2[j][1] >= 'a') && (temp_c_2[j + 1][1] <= 'z' && temp_c_2[j + 1][1] >= 'a'))
+				{
+					if (temp_c_2[j][1] > temp_c_2[j + 1][1])
+					{
+						char temp_c = ' ';
+						temp_c = temp_c_2[j][1];
+						temp_c_2[j][1] = temp_c_2[j + 1][1];
+						temp_c_2[j + 1][1] = temp_c;
+					}
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < round.action_creature_icon.size(); i++)
+	{
+		round.agility[i] = temp_c_2[i][0];
+		round.action_creature_icon[i] = temp_c_2[i][1];
+	}
+	/*for (int i = 0; i < round.action_creature_icon.size(); i++)
+	{
+		std::cout << round.action_creature_icon[i] << " " << round.agility[i] << std::endl;
+	}*/
+}
+void gamemanger::print_drawing()//輸出行動順序
+{
+	for (int i = 0; i < round.action_creature_icon.size(); i++)
+	{
+		if (round.action_creature_icon[i]<='Z'&& round.action_creature_icon[i]>='A')//玩家
+		{
+			std::cout << round.action_creature_icon[i] << " ";
+			if (round.agility[i]<10)
+			{
+				std::cout << "0";
+			}
+			std::cout << round.agility[i]<<" ";
+			for (int j=0;j<playingData_hero.hero_amount;j++)
+			{
+				if (round.action_creature_icon[i]==playingData_hero.hero_status[j].icon)
+				{
+					std::cout << playingData_hero.hero_status[j].action_card[0];
+					if (playingData_hero.hero_status[j].action_card[0]!=-1)
+					{
+						std::cout <<" "<< playingData_hero.hero_status[j].action_card[1];
+					}
+					break;
+				}
+			}
+		}
+		else if (round.action_creature_icon[i] <= 'z' && round.action_creature_icon[i] >= 'a')//怪獸
+		{
+
+		}
+		std::cout << std::endl;
 	}
 }
 void gamemanger::set_startpos() 

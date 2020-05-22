@@ -8,11 +8,11 @@ enum Action
 };
 monster& All_monster::operator[](char icon)
 {
-	for (auto mon : monster_status)
+	for (int i=0;i<monster_status.size();i++)
 	{
-		if (mon.icon == icon)
+		if (monster_status[i].icon == icon)
 		{
-			return mon;
+			return monster_status[i];
 		}
 	}
 	cout << "monster icon ERROR in operater[]\n";
