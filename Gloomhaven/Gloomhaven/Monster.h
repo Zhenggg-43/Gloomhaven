@@ -41,6 +41,7 @@ public:
 	std::vector<std::string>name;
 	std::vector<S_monster>elite;
 	std::vector<S_monster>normal;
+
 	typedef std::vector < monster_card> Deck;
 	std::vector<Deck>All_deck;
 
@@ -49,18 +50,23 @@ public:
 class monster
 {
 public:
-	bool ifactive;
+	bool ifdead;
 	std::string name;
 	char icon;
 	int hp_max, power, range;
 	int hp;
-	typedef std::vector < monster_card> Deck;
-	Deck cards;//怪物卡牌
+
+	typedef std::vector < monster_card> Deck;//怪物卡牌
+	Deck cards;
+	std::vector<int>hand;
+	std::vector<int>discard;
+	int choosed_card;
 };
 class All_monster
 {
 public:
 	void printAllmonster();
+	monster& operator[](char);
 
 	int monster_amount = 0;
 	std::vector<monster>monster_status;//怪物狀態

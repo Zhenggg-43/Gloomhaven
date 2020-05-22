@@ -1,4 +1,6 @@
 #include"gamamanager.h"
+#define Map PlayingData_map
+#define Monster PlayingData_monster
 bool gamemanger::gameloop()
 {
 
@@ -6,7 +8,7 @@ bool gamemanger::gameloop()
 		return false;
 
 	menu();
-
+	
 	play_game();
 
 	return true;
@@ -357,7 +359,7 @@ void gamemanger::load_map()
 				{
 					if (monster_file.name[pos] == name_temp)
 					{
-						temp_monster.ifactive = 0;
+						temp_monster.ifdead = 0;
 						temp_monster.name = monster_file.name[pos];//name
 						temp_monster.hp_max = monster_file.normal[pos].hp;//basic data
 						temp_monster.hp = temp_monster.hp_max;
@@ -379,7 +381,7 @@ void gamemanger::load_map()
 				{
 					if (monster_file.name[pos] == name_temp)
 					{
-						temp_monster.ifactive = 0;
+						temp_monster.ifdead = 0;
 						temp_monster.name = monster_file.name[pos];//name
 						temp_monster.hp_max = monster_file.elite[pos].hp;//basic data
 						temp_monster.hp = temp_monster.hp_max;
@@ -717,6 +719,30 @@ void gamemanger::hero_turn()
 	}
 	//
 }
+void gamemanger::monster_turn()
+{
+	if (Flag_DebugMode)
+	{
+		for (int i = 0;i < active_monster_amount;i++)
+		{
+			char icon_act = active_monster[i];
+			Monster[icon_act].choosed_card = Monster[icon_act].hand[0];
+			round.agility.push_back(Monster[icon_act].cards[Monster[icon_act].hand[0]].agility);//第一張手牌的敏捷值
+			round.action_icon.push_back(icon_act);
+		}
+	}
+	else
+	{
+		for (int i = 0;i < active_monster_amount;i++)
+		{
+			char icon_act = active_monster[i];
+			round.action_icon.push_back(icon_act);
+			int index_card = rand() % Monster[icon_act].hand.size();//現有手牌index
+			Monster[icon_act].choosed_card = Monster[icon_act].hand[index_card];
+			round.agility.push_back(Monster[icon_act].cards[Monster[icon_act].hand[index_card]].agility);//隨機手牌的敏捷值
+		}
+	}
+}
 void gamemanger::set_startpos() 
 {
 	std::string iconstr="";
@@ -729,6 +755,26 @@ void gamemanger::set_startpos()
 	PlayingData_map.Set_Monsterpos(iconstr);
 	PlayingData_map.Set_Characterpos(playingData_hero.hero_amount);
 	PlayingData_map.Print_Sightmap();
+}
+void gamemanger::set_monster_active()//Map set sight 之後要用!!!!!!!!!!
+{
+	for (int i = 0;i < PlayingData_monster.monster_amount;i++)
+	{
+		int X= Map.monster_coordinate[i].x, Y= Map.monster_coordinate[i].y;
+		if (!Monster.monster_status[i].ifdead)
+		{
+			if (Map.sight[Y][X])
+			{
+				active_monster_amount++;
+				active_monster.push_back(Monster.monster_status[i].icon);//紀錄被激活怪物
+
+				for (int j = 0;j < Monster.monster_status[i].cards.size();j++)
+				{
+					Monster.monster_status[i].hand.push_back(j);//設定起始手排
+				}
+			}
+		}
+	}
 }
 void gamemanger::clearPlayingdata()
 {

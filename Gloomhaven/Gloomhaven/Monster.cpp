@@ -6,7 +6,18 @@ enum Action
 {
 	_t_, Move, Attack, Heal, Shield, Range
 };
-
+monster& All_monster::operator[](char icon)
+{
+	for (auto mon : monster_status)
+	{
+		if (mon.icon == icon)
+		{
+			return mon;
+		}
+	}
+	cout << "monster icon ERROR in operater[]\n";
+	return monster_status[0];
+}
 void All_monster::printAllmonster()
 {
 	for (auto monster : this->monster_status)

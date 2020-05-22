@@ -6,6 +6,8 @@
 #include<fstream>
 #include<sstream>
 #include<iostream>
+#include<ctime>
+#include<cstdlib>
 enum Action
 {
 	_t_,Move,Attack,Heal,Shield,Range
@@ -89,8 +91,8 @@ public:
 	void hero_turn();//玩家選擇卡牌
 	void monster_turn();//怪物抽取卡牌
 	void set_order();//依照敏捷設定順序
-	void hero_move();//玩家移動
-	void monster_move();//敵人移動
+	void hero_action();//玩家移動
+	void monster_action();//敵人移動
 	void gameover();//遊戲是否結束
 
 	void takedamage();//給予傷害
@@ -99,6 +101,9 @@ public:
 
 	void open_door();//判斷是否開門
 	void re_sight();//開門後重新設定視野
+	//設定怪物
+	void set_monster_active();
+	
 
 	//////////
 	void temp_function();
@@ -114,6 +119,9 @@ private:
 	All_monster PlayingData_monster;
 	map_data PlayingData_map;
 	Round round;
+
+	int active_monster_amount = 0;
+	std::vector<char>active_monster;
 };
 /*
 角色選牌(玩家) 指令(check {character icon} ) / 怪物選牌(active/function操作)
