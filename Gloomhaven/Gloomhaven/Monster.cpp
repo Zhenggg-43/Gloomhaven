@@ -22,7 +22,7 @@ void All_monster::printAllmonster()
 {
 	for (auto monster : this->monster_status)
 	{
-		std::cout << monster.name << ' ' << monster.icon << ' ' << monster.hp << ' ' << monster.power << ' ' << monster.range << std::endl;
+		std::cout <<monster.index<< monster.name << ' ' << monster.icon << ' ' << monster.hp << ' ' << monster.power << ' ' << monster.range << std::endl;
 		for (auto card : monster.cards)
 		{
 			std::cout << card.card_index << ' ' << card.agility << ' ';

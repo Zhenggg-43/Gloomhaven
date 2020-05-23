@@ -1259,9 +1259,79 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 	}
 }
 
-void gamemanger::monster_action(char &monster)//敵人行動
+void gamemanger::monster_action(const char &icon)//敵人行動
 {
+	Monster[icon].round_gain.power_gain = 0;
+	Monster[icon].round_gain.shield_gain = 0;
+	int card_index = Monster[icon].drew_card;
+	for (auto skill : Monster[icon].cards[card_index].skill)//執行指定怪物 指定卡牌的技能
+	{
+		if (skill.type == Action::Attack)
+		{
+			std::cout << "怪物Attack!!!!\n";
+			Monster[icon].round_gain.power_gain += skill.attack.attpower;//攻擊增益
+			//char Map.attack_function (monster index,charater index)
+			//if lock (a lock A in distance 3) return 'A'
+			//else (no one lock) return'0'
+			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
+			{
+				getchar();
+			}
+		}
+		else if (skill.type == Action::Heal)
+		{
+			Monster[icon].hp += skill.skillpower;
+			if (Monster[icon].hp > Monster[icon].hp_max)//回復超過則修正
+			{
+				Monster[icon].hp = Monster[icon].hp_max;
+			}
+			std::cout << icon << ' ' << "heal " << skill.skillpower << ", now hp is" << Monster[icon].hp << std::endl;
+			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
+			{
+				getchar();
+			}
+		}
+		else if (skill.type == Action::Move)
+		{
+			PlayingData_map.creature_Move(Monster[icon].index, icon, skill.movement);
+			PlayingData_map.Print_Sightmap();
+			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
+			{
+				getchar();
+			}
+		}
+		else if (skill.type == Action::Shield)
+		{
+			Monster[icon].round_gain.shield_gain += skill.skillpower;
+			std::cout << icon << ' ' <<"shield "<< skill.skillpower <<  " this turn\n";
+			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
+			{
+				getchar();
+			}
+		}
+	}
+	//處理手牌與棄牌
+	if (Monster[icon].cards[card_index].suffle_sign == 1)//有重洗標誌將牌組重製????????????????????????????????/
+	{
+		Monster[icon].hand.clear();
+		for (int i = 0;i < Monster[icon].cards.size();i++)
+		{
+			Monster[icon].hand.push_back(i);
+		}
+	}
+	else//沒有 將牌移至棄牌堆
+	{
+		Monster[icon].discard.push_back(Monster[icon].drew_card);
 
+		for (std::vector<int>::iterator hand = PlayingData_monster[icon].hand.begin();hand < Monster[icon].hand.end();hand++)
+		{
+			if (*hand == Monster[icon].drew_card)
+			{
+				Monster[icon].hand.erase(hand);//清除
+				break;
+			}
+		}
+	}
 }
 void gamemanger::deal_nextround()//處理每一輪攻擊的重製例如判斷死亡
 {

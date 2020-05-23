@@ -47,6 +47,11 @@ public:
 
 };//遊戲怪物資料
 //遊戲中資料
+struct Round_gain
+{
+	int power_gain = 0;
+	int shield_gain = 0;
+};
 class monster
 {
 public:
@@ -57,6 +62,7 @@ public:
 	char icon;
 	int hp_max, power, range;
 	int hp;
+	Round_gain round_gain;
 
 	typedef std::vector < monster_card> Deck;//怪物卡牌
 	Deck cards;
