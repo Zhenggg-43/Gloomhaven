@@ -534,14 +534,14 @@ void gamemanger::play_game()
 	set_monster_active();
 	//////////////////
 	std::cin.ignore();
-	while (1)/////////////////1之後會改成門與怪物是否沒了
+	while (gameover())
 	{
 		print_round();
-	//	std::cout << "test" << std::endl; int qqq = 0; std::cin >> qqq;
 		hero_turn();
 		monster_turn();
 		set_order();
 		print_drawing();
+		round_action();
 	}
 
 	std::cout << "我贏了嗎??隨便啦..." << std::endl;
@@ -594,6 +594,8 @@ void gamemanger::hero_turn()
 					ss >> temp_s;
 					if (temp_s == "check")//查看手牌
 					{
+						std::sort(playingData_hero.hero_status[i].hand.begin(), playingData_hero.hero_status[i].hand.end());
+						std::sort(playingData_hero.hero_status[i].deadwood.begin(), playingData_hero.hero_status[i].deadwood.end());
 						std::cout << "hand: ";
 						for (int j = 0; j < playingData_hero.hero_status[i].hand.size(); j++)
 						{
@@ -927,6 +929,309 @@ void gamemanger::print_drawing()//輸出行動順序
 		
 	}
 }
+void gamemanger::round_action()
+{
+	for (int i = 0; i < round.action_creature_icon.size(); i++)
+	{
+		if (round.action_creature_icon[i] <= 'Z' && round.action_creature_icon[i] >= 'A')//玩家
+		{
+			hero_action(round.action_creature_icon[i]);
+		}
+		else if (round.action_creature_icon[i] <= 'z' && round.action_creature_icon[i] >= 'a')//怪獸
+		{
+			monster_action(round.action_creature_icon[i]);
+		}
+	}
+	deal_nextround();
+}
+void gamemanger::hero_action(char &hero)//玩家行動
+{
+	for (int i=0;i<playingData_hero.hero_amount;i++)
+	{
+		if (playingData_hero.hero_status[i].icon==hero)//找要行動角色
+		{
+			if (playingData_hero.hero_status[i].action_card[0]==-1)
+			{
+				std::cout << hero << "'s turn: card " << playingData_hero.hero_status[i].action_card[0] << std::endl;
+				int b; bool a; hero_action__deal(3, 2, b, a, hero);
+				int temp_i=0;
+				bool have_card = false;
+				while (std::cin >> temp_i)
+				{
+					for (int j=0;j<playingData_hero.hero_status[i].deadwood.size();j++)//找棄牌堆要移除的牌
+					{
+						if (temp_i== playingData_hero.hero_status[i].deadwood[j])
+						{
+							playingData_hero.hero_status[i].deadwood.erase(playingData_hero.hero_status[i].deadwood.begin()+j);
+
+							for (int l = 0; l < playingData_hero.hero_status[i].deadwood.size(); l++)
+							{
+								playingData_hero.hero_status[i].hand.push_back(playingData_hero.hero_status[i].deadwood[l]);
+							}
+							playingData_hero.hero_status[i].deadwood.clear();
+
+							have_card = true;
+							break;
+						}
+					}
+					if (have_card)
+					{
+						std::cout << "remove card: " << temp_i << std::endl;
+						break;
+					}
+					else
+					{
+						std::cout << "你輸入了棄牌堆沒有的牌請重新輸入" << std::endl;
+					}
+				}
+				std::cin.ignore();
+			}
+			else
+			{
+				std::cout << hero << "'s turn: card " << playingData_hero.hero_status[i].action_card[0] << " " << playingData_hero.hero_status[i].action_card[1] << std::endl;
+				std::string temp_s;
+				bool attack = false;
+				int attack_power = 0;
+				while (std::getline(std::cin, temp_s))
+				{
+					if (temp_s.size() == 2)
+					{
+						if ((temp_s[0] - '0' == playingData_hero.hero_status[i].action_card[0] || temp_s[0] - '0' == playingData_hero.hero_status[i].action_card[1]) && (temp_s[1] == 'u' || temp_s[1] == 'd'))
+						{
+							if (temp_s[0] - '0' == playingData_hero.hero_status[i].action_card[0])//第一張行動卡
+							{
+								if (temp_s[1] == 'u')//上面
+								{
+									for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_type.size(); j++)
+									{
+										if (character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_type[j] != Action::Range && attack)
+										{
+											hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+										}
+
+										hero_action__deal(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_type[j], character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_power[j], attack_power, attack, hero);
+									}
+									//
+									if (attack)
+									{
+										hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+									}
+
+									for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_type.size(); j++)
+									{
+										if (character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_type[j] != Action::Range && attack)
+										{
+											hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+										}
+
+										hero_action__deal(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_type[j], character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_power[j], attack_power, attack, hero);
+									}
+
+									if (attack)
+									{
+										hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+									}
+								}
+								else//下面
+								{
+									for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_type.size(); j++)
+									{
+										if (character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_type[j] != Action::Range && attack)
+										{
+											hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+										}
+
+										hero_action__deal(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_type[j], character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_power[j], attack_power, attack, hero);
+									}
+									//
+									if (attack)
+									{
+										hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+									}
+
+									for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_type.size(); j++)
+									{
+										if (character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_type[j] != Action::Range && attack)
+										{
+											hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+										}
+
+										hero_action__deal(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_type[j], character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_power[j], attack_power, attack, hero);
+									}
+
+									if (attack)
+									{
+										hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+									}
+								}
+							}
+							else//第二張行動卡
+							{
+								if (temp_s[1] == 'u')//上面
+								{
+									for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_type.size(); j++)
+									{
+										if (character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_type[j] != Action::Range && attack)
+										{
+											hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+										}
+
+										hero_action__deal(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_type[j], character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_power[j], attack_power, attack, hero);
+									}
+									//
+									if (attack)
+									{
+										hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+									}
+
+									for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_type.size(); j++)
+									{
+										if (character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_type[j] != Action::Range && attack)
+										{
+											hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+										}
+
+										hero_action__deal(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_type[j], character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_power[j], attack_power, attack, hero);
+									}
+
+									if (attack)
+									{
+										hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+									}
+								}
+								else//下面
+								{
+									for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_type.size(); j++)
+									{
+										if (character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_type[j] != Action::Range && attack)
+										{
+											hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+										}
+
+										hero_action__deal(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_type[j], character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_power[j], attack_power, attack, hero);
+									}
+									//
+									if (attack)
+									{
+										hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+									}
+
+									for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_type.size(); j++)
+									{
+										if (character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_type[j] != Action::Range && attack)
+										{
+											hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+										}
+
+										hero_action__deal(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_type[j], character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_power[j], attack_power, attack, hero);
+									}
+
+									if (attack)
+									{
+										hero_action__deal(Action::Range, 1, attack_power, attack, hero);
+									}
+								}
+							}
+							//character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[j]];//該行動卡的資料
+							for (int ii=0;ii<2;ii++)
+							{
+								for (int j = 0; j < playingData_hero.hero_status[i].hand.size(); j++)
+								{
+									if (playingData_hero.hero_status[i].hand[j]== playingData_hero.hero_status[i].action_card[ii])
+									{
+										playingData_hero.hero_status[i].hand.erase(playingData_hero.hero_status[i].hand.begin()+j);
+										playingData_hero.hero_status[i].deadwood.push_back(playingData_hero.hero_status[i].action_card[ii]);
+										break;
+									}
+								}
+							}
+							break;
+						}
+						else
+						{
+							std::cout << "請輸入正確行動格式 格式為:Xu or Xd" << std::endl;
+						}
+					}
+					else
+					{
+						std::cout << "移動輸入格式錯誤請重新輸入" << std::endl;
+					}
+				}
+			}
+		}
+	}
+}
+void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &attack,char &hero_icon)
+{
+	if (type == Action::Attack)
+	{
+		attack = true;
+		attack_power = power;
+	}
+	else if(type == Action::Move)
+	{
+		std::cout << "Move " << power << std::endl;
+		std::string temp_s;
+		std::getline(std::cin, temp_s);
+	}
+	else if (type == Action::Heal)
+	{
+		std::cout <<hero_icon<< " heal " << power <<", now hp is ";
+		for (int i = 0; i < playingData_hero.hero_amount; i++)
+		{
+			if (playingData_hero.hero_status[i].icon == hero_icon)
+			{
+				playingData_hero.hero_status[i].hp += power;
+				for (int j=0;j<character_file.character_amount;j++)
+				{
+					if (playingData_hero.hero_status[i].name== character_file.name[j])
+					{
+						if (playingData_hero.hero_status[i].hp> character_file.hp[j])
+						{
+							playingData_hero.hero_status[i].hp = character_file.hp[j];
+						}
+					}
+				}
+				std::cout << playingData_hero.hero_status[i].hp << std::endl;
+				break;
+			}
+		}
+	}
+	else if (type == Action::Shield)
+	{
+		for (int i = 0; i < playingData_hero.hero_amount; i++)
+		{
+			if (playingData_hero.hero_status[i].icon == hero_icon)
+			{
+				playingData_hero.hero_status[i].shield += power;
+
+				break;
+			}
+		}
+		std::cout << hero_icon << " shield " << power << " this turn" << std::endl;
+	}
+	else if (type == Action::Range)
+	{
+		attack = false;
+		std::cout << "Attack " << attack_power<<" Range "<<power << std::endl;
+
+		//
+		std::string temp_s;
+		std::getline(std::cin, temp_s);
+	}
+}
+
+void gamemanger::monster_action(char &monster)//敵人行動
+{
+
+}
+void gamemanger::deal_nextround()//處理每一輪攻擊的重製例如判斷死亡
+{
+	for (int i=0;i<playingData_hero.hero_amount;i++)//清空所有英雄的護甲值
+	{
+		playingData_hero.hero_status[i].shield = 0;
+	}
+}
 void gamemanger::set_startpos() 
 {
 	std::string iconstr="";
@@ -967,4 +1272,8 @@ void gamemanger::clearPlayingdata()
 	PlayingData_map.monster_coordinate.clear();
 	delete[] PlayingData_map.body;
 	delete[] PlayingData_map.sight;
+}
+bool gamemanger::gameover()/////判斷有沒有遊戲結束
+{
+	return true;
 }

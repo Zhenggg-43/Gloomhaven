@@ -32,6 +32,16 @@ public:
 class character_data
 {
 public:
+	std::vector<character_card> operator[](std::string temp)
+	{
+		for (int i=0;i<character_amount;i++)
+		{
+			if (name[i]==temp)
+			{
+				return deck[i];
+			}
+		}
+	}
 	int character_amount = 0;
 	std::vector<std::string> name;
 	std::vector<int> hp;
@@ -47,6 +57,7 @@ public:
 	std::string name="";
 	char icon = ' ';
 	int hp = 0;
+	int shield = 0;
 	std::vector<int> hand;//現在手牌
 	std::vector<int> deadwood;//棄牌堆
 	int action_card[2] = {-1,-1};//如果第1張是-1代表長休不考慮第2張
@@ -54,6 +65,16 @@ public:
 class All_hero
 {
 public:
+	hero operator[](char temp)
+	{
+		for (int i=0;i<hero_amount;i++)
+		{
+			if (hero_status[i].icon==temp)
+			{
+				return hero_status[i];
+			}
+		}
+	}
 	int hero_amount = 0;
 	std::vector<hero> hero_status;//角色狀態
 };
@@ -93,9 +114,14 @@ public:
 	void monster_turn();//怪物抽取卡牌
 	void set_order();//依照敏捷設定順序
 	void print_drawing();//輸出行動順序
-	void hero_action();//玩家移動
-	void monster_action();//敵人移動
-	void gameover();//遊戲是否結束
+
+	void round_action();//依照行動順序行動
+	void hero_action(char&);//玩家移動
+	void hero_action__deal(int,int,int&,bool&,char&);
+	void monster_action(char&);//敵人移動
+	void deal_nextround();//每次行動玩需變動的事項例如判斷死亡之類的
+
+	bool gameover();//遊戲是否結束
 
 	void takedamage();//給予傷害
 	bool visible();//確認有無目標視野
