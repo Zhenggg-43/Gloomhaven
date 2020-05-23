@@ -323,7 +323,7 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 			{
 				return 0;
 			}
-			else if (body[Y][X] == '0' || body[Y][X] == '2')
+			else if (body[Y][X] == '0' || body[Y][X] == '2' || body[Y][X] == '3')
 			{
 				return 0;
 			}
@@ -346,7 +346,7 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 			{
 				return 0;
 			}
-			else if (body[Y][X] == '0' || body[Y][X] == '2')
+			else if (body[Y][X] == '0' || body[Y][X] == '2' || body[Y][X] == '3')
 			{
 				return 0;
 			}
@@ -369,7 +369,7 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 			{
 				return 0;
 			}
-			else if (body[Y][X] == '0' || body[Y][X] == '2')
+			else if (body[Y][X] == '0' || body[Y][X] == '2' || body[Y][X] == '3')
 			{
 				return 0;
 			}
@@ -392,7 +392,7 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 			{
 				return 0;
 			}
-			else if (body[Y][X] == '0' || body[Y][X] == '2')
+			else if (body[Y][X] == '0' || body[Y][X] == '2' || body[Y][X] == '3')
 			{
 				return 0;
 			}

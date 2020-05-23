@@ -1172,7 +1172,45 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 	{
 		std::cout << "Move " << power << std::endl;
 		std::string temp_s;
-		std::getline(std::cin, temp_s);
+		bool ac = true;
+		while (std::getline(std::cin, temp_s))
+		{
+			if (power>=temp_s.size()&&temp_s.size()>0)
+			{
+				if (temp_s[0]=='e')
+				{
+					break;
+				}
+				for (int i = 0; i < temp_s.size(); i++)
+				{
+					if (temp_s[i] != 'w' && temp_s[i] != 'a' && temp_s[i] != 's' && temp_s[i] != 'd')
+					{
+						ac = false;
+						break;
+					}
+				}
+				if (ac)
+				{
+					if (PlayingData_map.creature_Move(hero_icon, temp_s))
+					{
+						PlayingData_map.Print_Sightmap();
+						break;
+					}
+					else
+					{
+						std::cout << "error move!!!" << std::endl;
+					}
+				}
+				else
+				{
+					std::cout << "移動輸入含wasd以外字元請重新輸入" << std::endl;
+				}
+			}
+			else
+			{
+				std::cout << "移動步數輸入錯誤請重新輸入" << std::endl;
+			}
+		}
 	}
 	else if (type == Action::Heal)
 	{
