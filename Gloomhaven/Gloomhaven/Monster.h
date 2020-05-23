@@ -50,6 +50,8 @@ public:
 class monster
 {
 public:
+	int index=0;
+
 	bool ifdead;
 	std::string name;
 	char icon;
@@ -58,7 +60,7 @@ public:
 
 	typedef std::vector < monster_card> Deck;//©Çª«¥dµP
 	Deck cards;
-	std::vector<int>hand;
+	std::vector<int>hand;// card vector index
 	std::vector<int>discard;
 	int drew_card;
 };

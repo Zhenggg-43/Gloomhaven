@@ -54,43 +54,37 @@ void All_monster::printAllmonster()
 		std::cout << std::endl;
 	}
 }
-void All_monster::printmonstercard(char icon, int card_index)
+void All_monster::printmonstercard(char icon, int card_Vecindex)
 {
 	for (auto monster : monster_status)
 	{
 		if (monster.icon == icon)
 		{
 			std::cout << monster.name << ' ';//名稱
-			for (auto card : monster.cards)
-			{
-				if (card.card_index == card_index)
-				{
-					cout << card.agility << ' ';//敏捷值
 
-					for (auto skill : card.skill)//技能
+			auto card = monster.cards[card_Vecindex];//卡牌//////////////////
+			cout << card.agility << ' ';//敏捷值
+			for (auto skill : card.skill)//技能
+			{
+				if (skill.type == Action::Attack)
+				{
+					std::cout << "attack " << skill.attack_power << ' ';
+					if (skill.attack.ifrange)
 					{
-						if (skill.type == Action::Attack)
-						{
-							std::cout << "attack " << skill.attack_power << ' ';
-							if (skill.attack.ifrange)
-							{
-								std::cout << "range " << skill.attack_range << ' ';
-							}
-						}
-						else if (skill.type == Action::Heal)
-						{
-							std::cout << "heal " << skill.skillpower << ' ';
-						}
-						else if (skill.type == Action::Move)
-						{
-							std::cout << "move " << skill.movement << ' ';
-						}
-						else if (skill.type == Action::Shield)
-						{
-							std::cout << "shield " << skill.skillpower << ' ';
-						}
+						std::cout << "range " << skill.attack_range << ' ';
 					}
-					break;
+				}
+				else if (skill.type == Action::Heal)
+				{
+					std::cout << "heal " << skill.skillpower << ' ';
+				}
+				else if (skill.type == Action::Move)
+				{
+					std::cout << "move " << skill.movement << ' ';
+				}
+				else if (skill.type == Action::Shield)
+				{
+					std::cout << "shield " << skill.skillpower << ' ';
 				}
 			}
 			cout << endl;

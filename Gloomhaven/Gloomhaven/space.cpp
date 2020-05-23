@@ -327,13 +327,14 @@ void gamemanger::load_map()
 		int monster_amount_temp;
 		char icon_temp = 'a';
 		file >> monster_amount_temp;
+		int index = 0;
 		for (int i = 0;i < monster_amount_temp;i++)
 		{
 			std::string name_temp="";
 			monster temp_monster;
 			S_coordinate temp_coor;
 			int xtemp = 0, ytemp = 0,montype;
-
+			
 			file >> name_temp >> xtemp >> ytemp;
 			temp_coor.x = xtemp, temp_coor.y = ytemp;
 			//type
@@ -366,6 +367,8 @@ void gamemanger::load_map()
 						temp_monster.power = monster_file.normal[pos].power;
 						temp_monster.range = monster_file.normal[pos].range;
 						temp_monster.cards = monster_file.All_deck[pos];//deck
+						temp_monster.index = index;//設定index
+						index++;
 						break;
 					}
 				}
@@ -388,6 +391,8 @@ void gamemanger::load_map()
 						temp_monster.power = monster_file.elite[pos].power;
 						temp_monster.range = monster_file.elite[pos].range;
 						temp_monster.cards = monster_file.All_deck[pos];//deck
+						temp_monster.index = index;//設定index
+						index++;
 						break;
 					}
 				}
@@ -524,8 +529,10 @@ void gamemanger::characterANDskill()
 void gamemanger::play_game()
 {
 	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
+	//設定起始位置
 	set_startpos();
 	set_monster_active();
+	//////////////////
 	std::cin.ignore();
 	while (1)/////////////////1之後會改成門與怪物是否沒了
 	{
@@ -728,10 +735,10 @@ void gamemanger::monster_turn()
 	{
 		for (int i = 0;i < active_monster_amount;i++)
 		{
-			//char icon_act = active_monster[i];
-			//Monster[icon_act].choosed_card = Monster[icon_act].hand[0];
-			//round.agility.push_back(Monster[icon_act].cards[Monster[icon_act].hand[0]].agility);//第一張手牌的敏捷值
-			//round.action_creature_icon.push_back(icon_act);
+			char acting_icon = active_monster[i];
+			Monster[acting_icon].drew_card = Monster[acting_icon].hand[0];
+			round.agility.push_back(Monster[acting_icon].cards[Monster[acting_icon].hand[0]].agility);//第一張手牌的敏捷值
+			round.action_creature_icon.push_back(acting_icon);
 		}
 	}
 	else
@@ -743,19 +750,19 @@ void gamemanger::monster_turn()
 		}
 		for (int i = 0;i < str_mon.length();i++)
 		{
-			char icon_act = str_mon[i];
-			int index_card = rand() % Monster[icon_act].hand.size();//現有手牌index
+			char acting_icon = str_mon[i];
+			int hand_index = rand() % Monster[acting_icon].hand.size();//現有手牌index  
 
-			round.action_creature_icon.push_back(icon_act);//當下pos
-			Monster[icon_act].drew_card = Monster[icon_act].hand[index_card];
-			round.agility.push_back(Monster[icon_act].cards[Monster[icon_act].hand[index_card]].agility);//隨機手牌的敏捷值
+			round.action_creature_icon.push_back(acting_icon);//當下pos
+			Monster[acting_icon].drew_card = Monster[acting_icon].hand[hand_index];
+			round.agility.push_back(Monster[acting_icon].cards[Monster[acting_icon].hand[hand_index]].agility);//隨機手牌的敏捷值
 			for (int j = i + 1;j < str_mon.length();j++)
 			{
-				if (Monster[icon_act].name == Monster[str_mon[j]].name)//同種怪物
+				if (Monster[acting_icon].name == Monster[str_mon[j]].name)//同種怪物給予相同卡牌
 				{
-					round.action_creature_icon.push_back(str_mon[j]);//當下
-					Monster[str_mon[j]].drew_card = Monster[str_mon[j]].hand[index_card];
-					round.agility.push_back(Monster[str_mon[j]].cards[Monster[str_mon[j]].hand[index_card]].agility);//隨機手牌的敏捷值
+					round.action_creature_icon.push_back(str_mon[j]);
+					Monster[str_mon[j]].drew_card = Monster[str_mon[j]].hand[hand_index];
+					round.agility.push_back(Monster[str_mon[j]].cards[Monster[str_mon[j]].hand[hand_index]].agility);
 					str_mon.erase(j,j);
 					j--;
 				}
@@ -947,7 +954,7 @@ void gamemanger::set_monster_active()//Map set sight 之後要用!!!!!!!!!!
 
 				for (int j = 0;j < Monster.monster_status[i].cards.size();j++)
 				{
-					Monster.monster_status[i].hand.push_back(j);//設定起始手排
+					Monster.monster_status[i].hand.push_back(j);//設定起始手排cardVec
 				}
 			}
 		}

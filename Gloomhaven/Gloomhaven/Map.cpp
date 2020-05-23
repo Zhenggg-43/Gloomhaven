@@ -247,8 +247,8 @@ void map_data::Set_Characterpos(int character_amount)
 				{
 					choosed[b] = 1;
 				}
-
 			}
+
 		}
 	}
 
@@ -262,4 +262,152 @@ void map_data::Set_Monsterpos(string icon)
 		body[monster_c.y][monster_c.x] = icon[pos];
 		pos++;
 	}
+}
+
+bool map_data::creature_Move(const char icon,const std::string movement)
+{
+	const int index = icon - 'A';
+	int X = character_coordinate[index].x, Y = character_coordinate[index].y;
+	for (int i=0;i<movement.length();i++)
+	{
+		if (movement[i] == 'w')
+		{
+			Y--;
+		}
+		else if (movement[i] == 'a')
+		{
+			X--;
+		}
+		else if (movement[i] == 's')
+		{
+			Y++;
+		}
+		else if (movement[i] == 'd')
+		{
+			X++;
+		}
+		////移動是否合法
+		if (Y<0||Y>Y_border||X<0||X>X_border)
+		{
+			return 0;
+		}
+		else if (body[Y][X] == '0' || body[Y][X] == '2')
+		{
+			return 0;
+		}
+		else if(body[Y][X] >= 'a'&&body[Y][X] <= 'z')
+		{
+			return 0;
+		}
+		else if (i == movement.length() - 1 && (body[Y][X] >= 'A'&&body[Y][X] <= 'Z'))
+		{
+			return 0;
+		}
+
+	}
+	body[character_coordinate[index].y][character_coordinate[index].x] = '1';
+	body[Y][X] = icon;
+	character_coordinate[index].x = X;
+	character_coordinate[index].y = Y;
+	return 1;
+}
+bool map_data::creature_Move(const int index,const char icon,const std::string movement)
+{
+	int X = monster_coordinate[index].x, Y = monster_coordinate[index].y;
+	for (int i = 0;i < movement.length();i++)
+	{
+		if (movement[i] == 'w')
+		{
+			Y--;
+			if (Y<0 || Y>Y_border || X<0 || X>X_border)
+			{
+				return 0;
+			}
+			else if (body[Y][X] == '0' || body[Y][X] == '2')
+			{
+				return 0;
+			}
+			else if (body[Y][X] >= 'A'&&body[Y][X] <= 'Z')
+			{
+				return 0;
+			}
+			else if (i == movement.length() - 1 && (body[Y][X] >= 'a'&&body[Y][X] <= 'z'))
+			{
+				return 0;
+			}
+			body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
+			body[Y][X] = icon;
+			monster_coordinate[index].y = Y;
+		}
+		else if (movement[i] == 'a')
+		{
+			X--;
+			if (Y<0 || Y>Y_border || X<0 || X>X_border)
+			{
+				return 0;
+			}
+			else if (body[Y][X] == '0' || body[Y][X] == '2')
+			{
+				return 0;
+			}
+			else if (body[Y][X] >= 'A'&&body[Y][X] <= 'Z')
+			{
+				return 0;
+			}
+			else if (i == movement.length() - 1 && (body[Y][X] >= 'a'&&body[Y][X] <= 'z'))
+			{
+				return 0;
+			}
+			body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
+			body[Y][X] = icon;
+			monster_coordinate[index].x = X;
+		}
+		else if (movement[i] == 's')
+		{
+			Y++;
+			if (Y<0 || Y>Y_border || X<0 || X>X_border)
+			{
+				return 0;
+			}
+			else if (body[Y][X] == '0' || body[Y][X] == '2')
+			{
+				return 0;
+			}
+			else if (body[Y][X] >= 'A'&&body[Y][X] <= 'Z')
+			{
+				return 0;
+			}
+			else if (i == movement.length() - 1 && (body[Y][X] >= 'a'&&body[Y][X] <= 'z'))
+			{
+				return 0;
+			}
+			body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
+			body[Y][X] = icon;
+			monster_coordinate[index].y = Y;
+		}
+		else if (movement[i] == 'd')
+		{
+			X++;
+			if (Y<0 || Y>Y_border || X<0 || X>X_border)
+			{
+				return 0;
+			}
+			else if (body[Y][X] == '0' || body[Y][X] == '2')
+			{
+				return 0;
+			}
+			else if (body[Y][X] >= 'A'&&body[Y][X] <= 'Z')
+			{
+				return 0;
+			}
+			else if (i == movement.length() - 1 && (body[Y][X] >= 'a'&&body[Y][X] <= 'z'))
+			{
+				return 0;
+			}
+			body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
+			body[Y][X] = icon;
+			monster_coordinate[index].x = X;
+		}
+	}
+	return 1;
 }

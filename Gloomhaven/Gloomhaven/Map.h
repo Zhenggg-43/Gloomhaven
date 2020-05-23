@@ -16,6 +16,8 @@ public:
 	void Set_Sight(int,int);
 	void Print_Allmap();
 	void Print_Sightmap();
+	bool creature_Move(char, std::string);
+	bool creature_Move(int,char, std::string);
 
 	int X_border, Y_border;//邊界
 	std::string *body;//地圖本體
