@@ -859,7 +859,59 @@ void gamemanger::set_order()//¨Ì·Ó±Ó±¶³]©w¶¶§Ç
 				}
 				else if ((temp_c_2[j][1] <= 'z' && temp_c_2[j][1] >= 'a') && (temp_c_2[j + 1][1] <= 'z' && temp_c_2[j + 1][1] >= 'a'))
 				{
-					/**/
+					std::string temp_s_1, temp_s_2;
+					for (int l = 0; l < PlayingData_monster.monster_amount; l++)
+					{
+						if (temp_c_2[j][1] == PlayingData_monster.monster_status[l].icon)
+						{
+							temp_s_1 = PlayingData_monster.monster_status[l].name;
+						}
+					}
+					for (int l = 0; l < PlayingData_monster.monster_amount; l++)
+					{
+						if (temp_c_2[j + 1][1] == PlayingData_monster.monster_status[l].icon)
+						{
+							temp_s_2 = PlayingData_monster.monster_status[l].name;
+						}
+					}
+					if (temp_s_1 == temp_s_2)
+					{
+						if (temp_c_2[j][1] > temp_c_2[j + 1][1])
+						{
+							char temp_c = ' ';
+							temp_c = temp_c_2[j][1];
+							temp_c_2[j][1] = temp_c_2[j + 1][1];
+							temp_c_2[j + 1][1] = temp_c;
+						}
+					}
+					else
+					{
+						bool temp_b = true;
+						for (int l = 0; l < temp_s_1.size() && l < temp_s_2.size(); l++)
+						{
+							if (temp_s_1[l] > temp_s_2[l])
+							{
+								temp_b = false;
+								char temp_c = ' ';
+								temp_c = temp_c_2[j][1];
+								temp_c_2[j][1] = temp_c_2[j + 1][1];
+								temp_c_2[j + 1][1] = temp_c;
+								break;
+							}
+							else if (temp_s_1[l] < temp_s_2[l])
+							{
+								temp_b = false;
+								break;
+							}
+						}
+						if (temp_b && temp_s_1.size() > temp_s_2.size())
+						{
+							char temp_c = ' ';
+							temp_c = temp_c_2[j][1];
+							temp_c_2[j][1] = temp_c_2[j + 1][1];
+							temp_c_2[j + 1][1] = temp_c;
+						}
+					}
 				}
 			}
 		}
