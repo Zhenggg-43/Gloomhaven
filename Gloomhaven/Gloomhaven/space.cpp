@@ -1178,7 +1178,7 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 				{
 					if (PlayingData_map.creature_Move(hero_icon, temp_s))
 					{
-						PlayingData_map.Print_Sightmap();
+						PlayingData_map.Print_Sightedmap();
 						break;
 					}
 					else
@@ -1279,7 +1279,7 @@ void gamemanger::monster_action(const char &icon)//敵人行動
 		else if (skill.type == Action::Move)
 		{
 			PlayingData_map.creature_Move(Monster[icon].index, icon, skill.movement);
-			PlayingData_map.Print_Sightmap();
+			PlayingData_map.Print_Sightedmap();
 			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
 			{
 				getchar();
@@ -1336,7 +1336,7 @@ void gamemanger::set_startpos()
 	PlayingData_map.Print_Allmap();
 	PlayingData_map.Set_Monsterpos(iconstr);
 	PlayingData_map.Set_Characterpos(playingData_hero.hero_amount);
-	PlayingData_map.Print_Sightmap();
+	PlayingData_map.Print_Sightedmap();
 }
 void gamemanger::set_monster_active()//Map set sight 之後要用!!!!!!!!!!
 {

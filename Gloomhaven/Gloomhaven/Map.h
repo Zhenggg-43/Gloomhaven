@@ -15,9 +15,11 @@ public:
 	void Set_Monsterpos(std::string);
 	void Set_Sight(int,int);
 	void Print_Allmap();
-	void Print_Sightmap();
+	void Print_Sightedmap();
 	bool creature_Move(char, std::string);//for character
 	bool creature_Move(int,char, std::string);//for monster
+	int countRange(int, int);
+	bool visible(int, int);
 
 	int X_border, Y_border;//邊界
 	std::string *body;//地圖本體
