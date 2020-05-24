@@ -42,7 +42,6 @@ void gamemanger::loadgame()
 	temp_function();
 	set_debugmode();
 	load_file();
-	
 }
 void gamemanger::temp_function()
 {
@@ -248,20 +247,6 @@ void gamemanger::load_monster()
 	{
 		std::cout << "openfile_fail" << std::endl;
 	}
-
-	//for (int i = 0;i < monster_file.monster_amount;i++)
-	//{
-	//	std::cout << monster_file.name[i] << ' ' << monster_file.normal[i].hp << monster_file.normal[i].power << monster_file.normal[i].range << monster_file.elite[i].hp << monster_file.elite[i].power << monster_file.elite[i].range << std::endl;
-	//	for (int j = 0;j < 6;j++)
-	//	{
-	//		std::cout << monster_file.All_deck[i][j].card_index << ' ' << monster_file.All_deck[i][j].agility << ' ' << monster_file.All_deck[i][j].suffle_sign<<std::endl;
-	//		for (auto k : monster_file.All_deck[i][j].skill)
-	//		{
-	//			std::cout <<"move: "<< k.type << ' ' << k.power <<' '<< k.range <<' '<< k.movement <<' '<< k.range<<std::endl;
-	//		}
-	//	}
-	//	std::cout << "///////////////////////////////////\n";
-	//}
 }
 void gamemanger::set_debugmode() 
 {

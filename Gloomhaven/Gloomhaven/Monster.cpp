@@ -8,14 +8,25 @@ enum Action
 };
 monster& All_monster::operator[](char icon)
 {
-	for (int i=0;i<monster_status.size();i++)
+	int left = monster_status.front().index, right = monster_status.back().index;
+	while (left < right)
 	{
-		if (monster_status[i].icon == icon)
+		int m = (left + right) / 2;
+		if (monster_status[m].icon == icon)
 		{
-			return monster_status[i];
+			return monster_status[m];
+		}
+
+		if (monster_status[m].icon > icon)
+		{
+			right = m-1;
+		}
+		else
+		{
+			left = m+1;
 		}
 	}
-	cout << "monster icon ERROR in operater[]\n";
+	cout << "Monster icon ERROR in operater[]\n";
 	return monster_status[0];
 }
 void All_monster::printAllmonster()
