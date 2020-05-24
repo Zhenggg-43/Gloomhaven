@@ -859,13 +859,7 @@ void gamemanger::set_order()//依照敏捷設定順序
 				}
 				else if ((temp_c_2[j][1] <= 'z' && temp_c_2[j][1] >= 'a') && (temp_c_2[j + 1][1] <= 'z' && temp_c_2[j + 1][1] >= 'a'))
 				{
-					if (temp_c_2[j][1] > temp_c_2[j + 1][1])
-					{
-						char temp_c = ' ';
-						temp_c = temp_c_2[j][1];
-						temp_c_2[j][1] = temp_c_2[j + 1][1];
-						temp_c_2[j + 1][1] = temp_c;
-					}
+					/**/
 				}
 			}
 		}
@@ -876,10 +870,10 @@ void gamemanger::set_order()//依照敏捷設定順序
 		round.agility[i] = temp_c_2[i][0];
 		round.action_creature_icon[i] = temp_c_2[i][1];
 	}
-	/*for (int i = 0; i < round.action_creature_icon.size(); i++)
+	for (int i = 0; i < round.action_creature_icon.size(); i++)
 	{
 		std::cout << round.action_creature_icon[i] << " " << round.agility[i] << std::endl;
-	}*/
+	}
 }
 void gamemanger::print_drawing()//輸出行動順序
 {
