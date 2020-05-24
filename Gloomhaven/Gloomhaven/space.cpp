@@ -929,6 +929,8 @@ void gamemanger::set_order()//依照敏捷設定順序
 }
 void gamemanger::print_drawing()//輸出行動順序
 {
+	std::vector<std::string>tmp_name;
+
 	for (int i = 0; i < round.action_creature_icon.size(); i++)
 	{
 		if (round.action_creature_icon[i]<='Z'&& round.action_creature_icon[i]>='A')//玩家
@@ -955,7 +957,26 @@ void gamemanger::print_drawing()//輸出行動順序
 		}
 		else if (round.action_creature_icon[i] <= 'z' && round.action_creature_icon[i] >= 'a')//怪獸
 		{
-			Monster.printmonstercard(round.action_creature_icon[i], Monster[round.action_creature_icon[i]].drew_card);
+			if (tmp_name.empty())
+			{
+				tmp_name.push_back(Monster[round.action_creature_icon[i]].name);
+				Monster.printmonstercard(round.action_creature_icon[i], Monster[round.action_creature_icon[i]].drew_card);
+			}
+			else 
+			{
+				bool Flag_print=1;
+				for (auto for_I : tmp_name)
+				{
+					if (for_I == Monster[round.action_creature_icon[i]].name)
+						Flag_print = 0;
+				}
+				if (Flag_print)
+				{
+					Monster.printmonstercard(round.action_creature_icon[i], Monster[round.action_creature_icon[i]].drew_card);
+					tmp_name.push_back(Monster[round.action_creature_icon[i]].name);
+				}
+			}
+			
 		}
 		
 	}

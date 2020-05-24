@@ -18,6 +18,7 @@ public:
 	void Print_Sightedmap();
 	bool creature_Move(char, std::string);//for character
 	bool creature_Move(int,char, std::string);//for monster
+	bool step(int ,int);
 	int countRange(int, int);
 	bool visible(int, int);
 
