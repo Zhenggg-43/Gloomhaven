@@ -372,7 +372,7 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 			{
 				body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
 				body[Y][X] = icon;
-				monster_coordinate[index].y = Y;
+				monster_coordinate[index].x = X;
 			}
 		}
 		else if (movement[i] == 's')
@@ -426,7 +426,7 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 			{
 				body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
 				body[Y][X] = icon;
-				monster_coordinate[index].y = Y;
+				monster_coordinate[index].x = X;
 			}
 		}
 	}
