@@ -1,7 +1,8 @@
 #include"Map.h"
+#include<cmath>
 #define pos_start_T this->position_start 
 using namespace std;
-void map_data::Print_Sightmap()
+void map_data::Print_Sightedmap()
 {
 	for (int y = 0;y < Y_border;y++)
 	{
@@ -409,5 +410,16 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 			monster_coordinate[index].x = X;
 		}
 	}
+	return 1;
+}
+int map_data::countRange(int C_index, int M_index)
+{
+	if (C_index >= 0 && C_index < character_coordinate.size() && M_index >= 0 && M_index < monster_coordinate.size())
+		return abs(character_coordinate[C_index].x - monster_coordinate[M_index].x) + abs(character_coordinate[C_index].y - monster_coordinate[M_index].y);
+	else
+		return -1;
+}
+bool map_data::visible(int C_index,  int M_index)
+{
 	return 1;
 }
