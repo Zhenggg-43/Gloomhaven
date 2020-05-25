@@ -498,7 +498,7 @@ void gamemanger::characterANDskill()
 		}
 	}
 	//////////test_input
-	for (int i=0;i< playingData_hero.hero_amount;i++)
+	/*for (int i=0;i< playingData_hero.hero_amount;i++)
 	{
 		std::cout << playingData_hero.hero_status[i].name << "  "<< playingData_hero.hero_status[i].icon<<" "<< playingData_hero.hero_status[i].hp<<" ";
 		for (int j=0;j< playingData_hero.hero_status[i].hand.size();j++)
@@ -506,7 +506,7 @@ void gamemanger::characterANDskill()
 			std::cout << playingData_hero.hero_status[i].hand[j] << " ";
 		}
 		std::cout << std::endl;
-	}
+	}*/
 	//////////
 }
 
@@ -924,10 +924,11 @@ void gamemanger::set_order()//依照敏捷設定順序
 		round.agility[i] = temp_c_2[i][0];
 		round.action_creature_icon[i] = temp_c_2[i][1];
 	}
-	for (int i = 0; i < round.action_creature_icon.size(); i++)
+	//(輸出排序完的ICON與敏捷值)
+	/*for (int i = 0; i < round.action_creature_icon.size(); i++)
 	{
 		std::cout << round.action_creature_icon[i] << " " << round.agility[i] << std::endl;
-	}
+	}*/
 }
 void gamemanger::print_drawing()//輸出行動順序
 {
