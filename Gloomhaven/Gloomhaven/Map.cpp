@@ -268,6 +268,12 @@ void map_data::Set_Monsterpos(string icon)
 bool map_data::creature_Move(const char icon,const std::string movement)
 {
 	const int index = icon - 'A';
+	if (index < 0 && index >= character_coordinate.size())
+	{
+		cout << "index ERROR in charaMove\n";
+		return 0;
+	}
+
 	int X = character_coordinate[index].x, Y = character_coordinate[index].y;
 	for (int i=0;i<movement.length();i++)
 	{
@@ -312,12 +318,14 @@ bool map_data::creature_Move(const char icon,const std::string movement)
 	character_coordinate[index].y = Y;
 	return 1;
 }
-//bool map_data::step(int Y,int X)
-//{
-//
-//}
 bool map_data::creature_Move(const int index,const char icon,const std::string movement)
 {
+	if (index < 0 && index >= monster_coordinate.size())
+	{
+		cout << "index ERROR in monMove\n";
+		return 0;
+	}
+		
 	int X = monster_coordinate[index].x, Y = monster_coordinate[index].y;
 	for (int i = 0;i < movement.length();i++)
 	{
@@ -432,14 +440,123 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 	}
 	return 1;
 }
-int map_data::countRange(int C_index, int M_index)
+int map_data::countRange(const int C_index, const int M_index)
 {
 	if (C_index >= 0 && C_index < character_coordinate.size() && M_index >= 0 && M_index < monster_coordinate.size())
 		return abs(character_coordinate[C_index].x - monster_coordinate[M_index].x) + abs(character_coordinate[C_index].y - monster_coordinate[M_index].y);
 	else
+		cout << "index ERROR in countRange\n";
 		return -1;
 }
-bool map_data::visible(int C_index,  int M_index)
+bool map_data::visible(const int C_index, const  int M_index)
 {
+	//vertical
+	if (character_coordinate[C_index].x == monster_coordinate[M_index].x )
+	{
+		const int dy = character_coordinate[C_index].y - monster_coordinate[M_index].y;
+		if (dy > 0)
+		{
+			for (int i = monster_coordinate[M_index].y + 1;i < character_coordinate[C_index].y;i++)
+			{
+				if (body[i][character_coordinate[C_index].x] == '0')
+					return 0;
+			}
+			return 1;
+		}
+		else
+		{
+			for (int i = character_coordinate[C_index].y + 1;i < monster_coordinate[M_index].y;i++)
+			{
+				if (body[i][character_coordinate[C_index].x] == '0')
+					return 0;
+			}
+			return 1;
+		}
+	}
+	//parallel
+	else if (character_coordinate[C_index].y == monster_coordinate[M_index].y)
+	{
+		const int dx = character_coordinate[C_index].x - monster_coordinate[M_index].x;
+		if (dx > 0)
+		{
+			for (int i = monster_coordinate[M_index].x + 1;i < character_coordinate[C_index].x;i++)
+			{
+				if (body[character_coordinate[C_index].y][i] == '0')
+				{
+					return 0;
+				}
+			}
+			return 1;
+		}
+		else
+		{
+			for (int i = character_coordinate[C_index].x + 1;i < monster_coordinate[M_index].x;i++)
+			{
+				if (body[character_coordinate[C_index].y][i] == '0')
+				{
+					return 0;
+				}
+			}
+			return 1;
+		}
+	}
+	//y=mx+c
+	const double m = ((double)(character_coordinate[C_index].y - monster_coordinate[M_index].y)) / ((double)(character_coordinate[C_index].x - monster_coordinate[M_index].x));
+	const double c = (((double)monster_coordinate[M_index].y + 0.5) - m * ((double)monster_coordinate[M_index].x + 0.5));
+	const int dx = (character_coordinate[C_index].x - monster_coordinate[M_index].x);//
+	cout << "m: " << m << "c: " << c;
+	double ytmp = character_coordinate[C_index].y + 1;
+	for (int ix = 1;ix <= abs(dx)+1;ix++)
+	{
+		double ypos;
+		double xpos;
+		if (dx > 0)
+		{
+			ypos = m * (character_coordinate[C_index].x - ix) + c;
+			xpos = character_coordinate[C_index].x - ix;
+		}
+		else
+		{
+			ypos = m * (character_coordinate[C_index].x + ix) + c;
+			xpos = character_coordinate[C_index].x + ix;
+		}
+		bool singular_dot = 0;//經過交叉點
+		if (ypos - (int)ypos == 0)
+			singular_dot = 1;
+
+			ypos = ceil(ypos);
+			ytmp = ceil(ytmp);
+			if (singular_dot)
+				ypos++;
+		if (ypos > ytmp)
+		{
+			if (ix == abs(dx)+1)
+				ypos = monster_coordinate[M_index].y+1;
+			for (int j = ytmp;j <= ypos;j++)
+			{
+				body[j - 1][xpos - 1] = 'T';
+				//if (body[j - 1][xpos - 1] == '0')
+				//{
+				//	return 0;
+				//}
+			}
+		}
+		else
+		{
+			if (ix == abs(dx)+1)
+				ypos = monster_coordinate[M_index].y+1;
+			for (int j = ypos;j <= ytmp;j++)
+			{
+				body[j - 1][xpos - 1] = 'T';
+				//if (body[j - 1][xpos - 1] == '0')
+				//{
+				//	return 0;
+				//}
+			}
+		}
+		if (singular_dot)
+			ypos--;
+		ytmp = ypos;
+	}
 	return 1;
 }
