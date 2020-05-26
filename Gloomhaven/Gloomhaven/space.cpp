@@ -1382,6 +1382,10 @@ void gamemanger::hero_takedamage(char monster_icon,char hero_icon, int damage)
 				playingData_hero.hero_status[i].hp -= damage;
 			}
 			std::cout << playingData_hero.hero_status[i].hp << " hp" << std::endl;
+			if (playingData_hero.hero_status[i].hp<=0)
+			{
+				remove_dead_hero(hero_icon);
+			}
 			break;
 		}
 	}
