@@ -451,7 +451,7 @@ int map_data::countRange(const int C_index, const int M_index)
 bool map_data::visible(const int C_index, const  int M_index)
 {
 	//vertical
-	if (character_coordinate[C_index].x == monster_coordinate[M_index].x )
+	if (character_coordinate[C_index].x == monster_coordinate[M_index].x)
 	{
 		const int dy = character_coordinate[C_index].y - monster_coordinate[M_index].y;
 		if (dy > 0)
@@ -503,60 +503,195 @@ bool map_data::visible(const int C_index, const  int M_index)
 	//y=mx+c
 	const double m = ((double)(character_coordinate[C_index].y - monster_coordinate[M_index].y)) / ((double)(character_coordinate[C_index].x - monster_coordinate[M_index].x));
 	const double c = (((double)monster_coordinate[M_index].y + 0.5) - m * ((double)monster_coordinate[M_index].x + 0.5));
-	const int dx = (character_coordinate[C_index].x - monster_coordinate[M_index].x);//
-	cout << "m: " << m << "c: " << c<<endl;
-	double ytmp = character_coordinate[C_index].y + 1;
-	for (int ix = 1;ix <= abs(dx)+1;ix++)
+	const int dx = (character_coordinate[C_index].x - monster_coordinate[M_index].x);
+	cout << "m: " << m << "c: " << c << endl;
+
+	double ytmp;
+	if (dx > 0)
+		ytmp = monster_coordinate[M_index].y + 1;
+	else
+		ytmp = character_coordinate[C_index].y + 1;
+	for (int ix = 1;ix <= abs(dx) + 1;ix++)
 	{
 		double ypos;
 		double xpos;
+		//M>C
 		if (dx > 0)
 		{
-			ypos = m * (character_coordinate[C_index].x - ix) + c;
-			xpos = character_coordinate[C_index].x - ix;
+			ypos = m * (monster_coordinate[M_index].x + ix) + c;
+			xpos = monster_coordinate[M_index].x + ix;
+			//m>0
+			if (m > 0)
+			{
+				bool singular_dot = 0;//經過交叉點
+				if (ypos - (int)ypos == 0)
+					singular_dot = 1;
+
+				ypos = ceil(ypos);
+				ytmp = ceil(ytmp);
+
+				if (ypos >= ytmp)//
+				{
+
+					if (ix == abs(dx) + 1)
+						ypos = character_coordinate[C_index].y + 1;
+					for (int j = ytmp;j <= ypos;j++)
+					{
+						body[j - 1][xpos - 1] = 'T';
+						//if (body[j - 1][xpos - 1] == '0')
+						//{
+						//	return 0;
+						//}
+					}
+				}
+				else
+				{
+					if (ix == abs(dx) + 1)
+						ypos = character_coordinate[C_index].y + 1;
+					for (int j = ypos;j <= ytmp;j++)
+					{
+						body[j - 1][xpos - 1] = 'T';
+						//if (body[j - 1][xpos - 1] == '0')
+						//{
+						//	return 0;
+						//}
+					}
+				}
+				if (singular_dot)
+					ypos++;
+				ytmp = ypos;
+			}
+			else
+			{
+				bool singular_dot = 0;//經過交叉點
+				if (ypos - (int)ypos == 0)
+					singular_dot = 1;
+
+				ypos = ceil(ypos);
+				ytmp = ceil(ytmp);
+
+				if (singular_dot)
+					ypos++;
+				if (ypos >= ytmp)//
+				{
+
+					if (ix == abs(dx) + 1)
+						ypos = character_coordinate[C_index].y + 1;
+					for (int j = ytmp;j <= ypos;j++)
+					{
+						body[j - 1][xpos - 1] = 'T';
+						//if (body[j - 1][xpos - 1] == '0')
+						//{
+						//	return 0;
+						//}
+					}
+				}
+				else
+				{
+					if (ix == abs(dx) + 1)
+						ypos = character_coordinate[C_index].y + 1;
+					for (int j = ypos;j <= ytmp;j++)
+					{
+						body[j - 1][xpos - 1] = 'T';
+						//if (body[j - 1][xpos - 1] == '0')
+						//{
+						//	return 0;
+						//}
+					}
+				}
+				if (singular_dot)
+					ypos--;
+				ytmp = ypos;
+			}
 		}
+		//c>M
 		else
 		{
 			ypos = m * (character_coordinate[C_index].x + ix) + c;
 			xpos = character_coordinate[C_index].x + ix;
-		}
-		bool singular_dot = 0;//經過交叉點
-		if (ypos - (int)ypos == 0)
-			singular_dot = 1;
+			if (m > 0)
+			{
+				bool singular_dot = 0;//經過交叉點
+				if (ypos - (int)ypos == 0)
+					singular_dot = 1;
 
-			ypos = ceil(ypos);
-			ytmp = ceil(ytmp);
-			if (singular_dot)
-				ypos++;
-		if (ypos > ytmp)
-		{
-			if (ix == abs(dx)+1)
-				ypos = monster_coordinate[M_index].y+1;
-			for (int j = ytmp;j <= ypos;j++)
+				ypos = ceil(ypos);
+				ytmp = ceil(ytmp);
+
+				if (ypos >= ytmp)//
+				{
+
+					if (ix == abs(dx) + 1)
+						ypos = monster_coordinate[M_index].y + 1;
+					for (int j = ytmp;j <= ypos;j++)
+					{
+						body[j - 1][xpos - 1] = 'T';
+						//if (body[j - 1][xpos - 1] == '0')
+						//{
+						//	return 0;
+						//}
+					}
+				}
+				else
+				{
+					if (ix == abs(dx) + 1)
+						ypos = monster_coordinate[M_index].y + 1;
+					for (int j = ypos;j <= ytmp;j++)
+					{
+						body[j - 1][xpos - 1] = 'T';
+						//if (body[j - 1][xpos - 1] == '0')
+						//{
+						//	return 0;
+						//}
+					}
+				}
+				if (singular_dot)
+					ypos++;
+				ytmp = ypos;
+			}
+			else
 			{
-				body[j - 1][xpos - 1] = 'T';
-				//if (body[j - 1][xpos - 1] == '0')
-				//{
-				//	return 0;
-				//}
+				bool singular_dot = 0;//經過交叉點
+				if (ypos - (int)ypos == 0)
+					singular_dot = 1;
+
+				ypos = ceil(ypos);
+				ytmp = ceil(ytmp);
+
+				if (singular_dot)
+					ypos++;
+				if (ypos >= ytmp)//
+				{
+
+					if (ix == abs(dx) + 1)
+						ypos = monster_coordinate[M_index].y + 1;
+					for (int j = ytmp;j <= ypos;j++)
+					{
+						body[j - 1][xpos - 1] = 'T';
+						//if (body[j - 1][xpos - 1] == '0')
+						//{
+						//	return 0;
+						//}
+					}
+				}
+				else
+				{
+					if (ix == abs(dx) + 1)
+						ypos = monster_coordinate[M_index].y + 1;
+					for (int j = ypos;j <= ytmp;j++)
+					{
+						body[j - 1][xpos - 1] = 'T';
+						//if (body[j - 1][xpos - 1] == '0')
+						//{
+						//	return 0;
+						//}
+					}
+				}
+				if (singular_dot)
+					ypos--;
+				ytmp = ypos;
 			}
 		}
-		else
-		{
-			if (ix == abs(dx)+1)
-				ypos = monster_coordinate[M_index].y+1;
-			for (int j = ypos;j <= ytmp;j++)
-			{
-				body[j - 1][xpos - 1] = 'T';
-				//if (body[j - 1][xpos - 1] == '0')
-				//{
-				//	return 0;
-				//}
-			}
-		}
-		if (singular_dot)
-			ypos--;
-		ytmp = ypos;
 	}
 	return 1;
 }
