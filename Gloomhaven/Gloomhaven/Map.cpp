@@ -265,9 +265,8 @@ void map_data::Set_Monsterpos(string icon)
 	}
 }
 
-bool map_data::creature_Move(const char icon,const std::string movement)
+bool map_data::character_Move(const int index ,const char icon,const std::string movement)
 {
-	const int index = icon - 'A';
 	if (index < 0 && index >= character_coordinate.size())
 	{
 		cout << "index ERROR in charaMove\n";
@@ -537,11 +536,11 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						body[j - 1][xpos - 1] = 'T';
-						//if (body[j - 1][xpos - 1] == '0')
-						//{
-						//	return 0;
-						//}
+						/*body[j - 1][xpos - 1] = 'T';*/
+						if (body[j - 1][xpos - 1] == '0')
+						{
+							return 0;
+						}
 					}
 				}
 				else
@@ -550,11 +549,11 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						body[j - 1][xpos - 1] = 'T';
-						//if (body[j - 1][xpos - 1] == '0')
-						//{
-						//	return 0;
-						//}
+						/*body[j - 1][xpos - 1] = 'T';*/
+						if (body[j - 1][xpos - 1] == '0')
+						{
+							return 0;
+						}
 					}
 				}
 				if (singular_dot)
@@ -579,11 +578,11 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						body[j - 1][xpos - 1] = 'T';
-						//if (body[j - 1][xpos - 1] == '0')
-						//{
-						//	return 0;
-						//}
+						/*body[j - 1][xpos - 1] = 'T';*/
+						if (body[j - 1][xpos - 1] == '0')
+						{
+							return 0;
+						}
 					}
 				}
 				else
@@ -592,11 +591,11 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						body[j - 1][xpos - 1] = 'T';
-						//if (body[j - 1][xpos - 1] == '0')
-						//{
-						//	return 0;
-						//}
+						/*body[j - 1][xpos - 1] = 'T';*/
+						if (body[j - 1][xpos - 1] == '0')
+						{
+							return 0;
+						}
 					}
 				}
 				if (singular_dot)
@@ -625,11 +624,11 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						body[j - 1][xpos - 1] = 'T';
-						//if (body[j - 1][xpos - 1] == '0')
-						//{
-						//	return 0;
-						//}
+						/*body[j - 1][xpos - 1] = 'T';*/
+						if (body[j - 1][xpos - 1] == '0')
+						{
+							return 0;
+						}
 					}
 				}
 				else
@@ -638,11 +637,11 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						body[j - 1][xpos - 1] = 'T';
-						//if (body[j - 1][xpos - 1] == '0')
-						//{
-						//	return 0;
-						//}
+						/*body[j - 1][xpos - 1] = 'T';*/
+						if (body[j - 1][xpos - 1] == '0')
+						{
+							return 0;
+						}
 					}
 				}
 				if (singular_dot)
@@ -667,11 +666,11 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						body[j - 1][xpos - 1] = 'T';
-						//if (body[j - 1][xpos - 1] == '0')
-						//{
-						//	return 0;
-						//}
+						/*body[j - 1][xpos - 1] = 'T';*/
+						if (body[j - 1][xpos - 1] == '0')
+						{
+							return 0;
+						}
 					}
 				}
 				else
@@ -680,11 +679,11 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						body[j - 1][xpos - 1] = 'T';
-						//if (body[j - 1][xpos - 1] == '0')
-						//{
-						//	return 0;
-						//}
+						/*body[j - 1][xpos - 1] = 'T';*/
+						if (body[j - 1][xpos - 1] == '0')
+						{
+							return 0;
+						}
 					}
 				}
 				if (singular_dot)
@@ -694,4 +693,14 @@ bool map_data::visible(const int C_index, const  int M_index)
 		}
 	}
 	return 1;
+}
+
+void map_data::character_killed(int index)
+{
+	body[character_coordinate[index].y][character_coordinate[index].x] = '1';
+	character_coordinate.erase(character_coordinate.begin() + index);
+}
+void map_data::monster_killed(int index)
+{
+	body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
 }

@@ -16,11 +16,13 @@ public:
 	void Set_Sight(int,int);
 	void Print_Allmap();
 	void Print_Sightedmap();
-	bool creature_Move(char, std::string);//for character
+	bool character_Move(int,char, std::string);//for character
 	bool creature_Move(int,char, std::string);//for monster
-	bool step(int ,int);
 	int countRange(int, int);
 	bool visible(int, int);
+
+	void character_killed(int);
+	void monster_killed(int);
 
 	int X_border, Y_border;//邊界
 	std::string *body;//地圖本體

@@ -517,7 +517,7 @@ void gamemanger::play_game()
 	//設定起始位置
 	set_startpos();
 	set_monster_active();
-	PlayingData_map.visible(1, 0);
+	PlayingData_map.visible(2, 0);
 	PlayingData_map.Print_Allmap();
 	//////////////////
 	std::cin.ignore();
@@ -541,6 +541,16 @@ void gamemanger::print_round()
 }
 void gamemanger::hero_turn()
 {
+	//////////
+	for (int i = 0; i < playingData_hero.hero_amount; i++)
+	{
+		if (playingData_hero.hero_status[i].deadwood.size()<2&& playingData_hero.hero_status[i].hand.size()<2)
+		{
+			remove_dead_hero(playingData_hero.hero_status[i].icon);
+			i--;
+		}
+	}
+	//////////
 	std::stringstream ss;
 	std::string temp_s="";
 	int temp_i = 0;
@@ -1246,7 +1256,15 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 				}
 				if (ac)
 				{
-					if (PlayingData_map.creature_Move(hero_icon, temp_s))
+					int temp_i = 0;
+					for (int i=0;i<playingData_hero.hero_amount;i++)
+					{
+						if (playingData_hero.hero_status[i].icon==hero_icon)
+						{
+							temp_i = i;
+						}
+					}
+					if (PlayingData_map.character_Move(temp_i,hero_icon, temp_s))
 					{
 						PlayingData_map.Print_Sightedmap();
 						break;
@@ -1306,12 +1324,81 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 	else if (type == Action::Range)
 	{
 		attack = false;
-		std::cout << "Attack " << attack_power<<" Range "<<power << std::endl;
+		std::cout << "Attack " << attack_power << " Range " << power << std::endl;
 
 		//
 		std::string temp_s;
-		std::getline(std::cin, temp_s);
+		while (std::getline(std::cin, temp_s))
+		{
+			if (temp_s.size() == 1)
+			{
+				bool attacked = false;
+				if (temp_s[0]=='0')
+				{
+					break;
+				}
+				for (int i=0;i<playingData_hero.hero_amount;i++)
+				{
+					if (playingData_hero.hero_status[i].icon==hero_icon)
+					{
+						if (PlayingData_map.visible(i, Monster[temp_s[0]].index) && PlayingData_map.countRange(i, Monster[temp_s[0]].index) <= power)
+						{
+							attacked = true;
+							std::cout << "打傷害摟!!" << std::endl;///
+						}
+						else
+						{
+							std::cout << "error target!!!" << std::endl;
+						}
+						break;
+					}
+				}
+				if (attacked)
+				{
+					break;
+				}
+			}
+			else
+			{
+				std::cout << "輸入格式錯誤請輸入想攻擊的怪物icon或者0放棄攻擊" << std::endl;
+			}
+		}
 	}
+}
+void gamemanger::hero_takedamage(char monster_icon,char hero_icon, int damage)
+{
+	for (int i=0;i<playingData_hero.hero_amount;i++)
+	{
+		if (hero_icon==playingData_hero.hero_status[i].icon)
+		{
+			std::cout << monster_icon << " attack " << hero_icon << " " << damage << " damage, " << hero_icon << " shield " << playingData_hero.hero_status[i].shield << ", " << hero_icon << " remain ";
+			if (playingData_hero.hero_status[i].shield>=damage)
+			{
+				playingData_hero.hero_status[i].shield -= damage;
+			}
+			else
+			{
+				damage -= playingData_hero.hero_status[i].shield;
+				playingData_hero.hero_status[i].hp -= damage;
+			}
+			std::cout << playingData_hero.hero_status[i].hp << " hp" << std::endl;
+			break;
+		}
+	}
+}
+void gamemanger::remove_dead_hero(char hero_icon)
+{
+	for (int i =0;i<playingData_hero.hero_amount;i++)
+	{
+		if (playingData_hero.hero_status[i].icon== hero_icon)
+		{
+			playingData_hero.hero_status.erase(playingData_hero.hero_status.begin()+i);
+			PlayingData_map.character_killed(i);
+			std::cout <<hero_icon<<" is killed"<<std::endl;
+			break;
+		}
+	}
+	playingData_hero.hero_amount--;
 }
 
 void gamemanger::monster_action(const char &icon)//敵人行動

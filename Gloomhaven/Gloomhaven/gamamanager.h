@@ -123,9 +123,9 @@ public:
 
 	bool gameover();//遊戲是否結束
 
-	void takedamage();//給予傷害
-	bool visible();//確認有無目標視野
-	void check_dead_creature();//尋找死亡目標並移除
+	void hero_takedamage(char,char,int);//給予英雄傷害
+	void monster_takedamage(char,char, int);//給予怪物傷害
+	void remove_dead_hero(char);//死亡英雄移除
 
 	void open_door();//判斷是否開門
 	void re_sight();//開門後重新設定視野
