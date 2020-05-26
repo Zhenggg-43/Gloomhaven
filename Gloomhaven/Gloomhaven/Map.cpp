@@ -515,10 +515,12 @@ bool map_data::visible(const int C_index, const  int M_index)
 	{
 		double ypos;
 		double xpos;
+		//M>C
 		if (dx > 0)
 		{
 			ypos = m * (monster_coordinate[M_index].x + ix) + c;
 			xpos = monster_coordinate[M_index].x + ix;
+			//m>0
 			if (m > 0)
 			{
 				bool singular_dot = 0;//經過交叉點
@@ -602,6 +604,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 				ytmp = ypos;
 			}
 		}
+		//c>M
 		else
 		{
 			ypos = m * (character_coordinate[C_index].x + ix) + c;

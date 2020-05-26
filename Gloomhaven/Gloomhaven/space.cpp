@@ -510,14 +510,14 @@ void gamemanger::characterANDskill()
 	//////////
 }
 
-///////////////////////////////play game
+///////////////////////////////play game////////////////////////////
 void gamemanger::play_game()
 {
 	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
 	//設定起始位置
 	set_startpos();
 	set_monster_active();
-	PlayingData_map.visible(0, 5);
+	PlayingData_map.visible(0, 1);
 	PlayingData_map.Print_Allmap();
 	//////////////////
 	std::cin.ignore();
