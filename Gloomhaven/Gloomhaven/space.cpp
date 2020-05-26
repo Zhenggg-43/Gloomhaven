@@ -517,7 +517,7 @@ void gamemanger::play_game()
 	//設定起始位置
 	set_startpos();
 	set_monster_active();
-	PlayingData_map.visible(0, 4);
+	PlayingData_map.visible(1, 0);
 	PlayingData_map.Print_Allmap();
 	//////////////////
 	std::cin.ignore();
