@@ -311,7 +311,20 @@ bool map_data::character_Move(const int index ,const char icon,const std::string
 		}
 
 	}
-	body[character_coordinate[index].y][character_coordinate[index].x] = '1';
+
+	for (auto door_c : door_coordinate)
+	{
+		if (character_coordinate[index].y==door_c.y&& character_coordinate[index].x==door_c.x)
+		{
+			body[character_coordinate[index].y][character_coordinate[index].x] = '3';
+			break;
+		}
+		else
+		{
+			body[character_coordinate[index].y][character_coordinate[index].x] = '1';
+		}
+	}
+	
 	body[Y][X] = icon;
 	character_coordinate[index].x = X;
 	character_coordinate[index].y = Y;
@@ -697,7 +710,19 @@ bool map_data::visible(const int C_index, const  int M_index)
 
 void map_data::character_killed(int index)
 {
-	body[character_coordinate[index].y][character_coordinate[index].x] = '1';
+	for (auto door_c : door_coordinate)
+	{
+		if (character_coordinate[index].y == door_c.y && character_coordinate[index].x == door_c.x)
+		{
+			body[character_coordinate[index].y][character_coordinate[index].x] = '3';
+			break;
+		}
+		else
+		{
+			body[character_coordinate[index].y][character_coordinate[index].x] = '1';
+		}
+	}
+	//body[character_coordinate[index].y][character_coordinate[index].x] = '1';
 	character_coordinate.erase(character_coordinate.begin() + index);
 }
 void map_data::monster_killed(int index)

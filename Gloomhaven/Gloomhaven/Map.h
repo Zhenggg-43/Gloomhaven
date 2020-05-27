@@ -28,6 +28,8 @@ public:
 	std::string *body;//地圖本體
 	bool **sight;//地圖視野
 	int  position_start[4][2];//可選起始位置  [y][x]
+	int door_amount = 0;
+	std::vector<S_coordinate>door_coordinate;//
 	std::vector<S_coordinate>monster_coordinate;//怪物座標
 	std::vector<S_coordinate>character_coordinate;//角色座標
 };

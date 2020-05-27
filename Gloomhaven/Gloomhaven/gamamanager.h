@@ -106,6 +106,7 @@ public:
 	void character_amount();
 	void characterANDskill();
 	void load_map();
+	void set_door_amount();
 	//////////遊戲流程
 	void play_game();
 	void set_startpos();//設定玩家怪物進入地圖
@@ -129,7 +130,6 @@ public:
 	void remove_action_icon(char);//死亡生物從行動列中移除
 
 	void open_door();//判斷是否開門
-	void re_sight();//開門後重新設定視野
 	//設定怪物
 	void set_monster_active();
 	

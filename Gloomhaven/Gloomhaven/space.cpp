@@ -398,6 +398,22 @@ void gamemanger::load_map()
 	//PlayingData_monster.printAllmonster();
 	std::cout << "你輸入了地圖你真棒!!" << std::endl;
 }
+void gamemanger::set_door_amount()
+{
+	for (int i=0;i<PlayingData_map.Y_border;i++)
+	{
+		for (int j=0;j<PlayingData_map.X_border;j++)
+		{
+			if (PlayingData_map.body[i][j] == '3')
+			{
+				PlayingData_map.door_amount++;
+				S_coordinate tmp;
+				tmp.x = j, tmp.y = i;
+				Map.door_coordinate.push_back(tmp);
+			}
+		}
+	}
+}
 
 
 void gamemanger::menu()
@@ -405,6 +421,7 @@ void gamemanger::menu()
 	character_amount();
 	characterANDskill();
 	load_map();
+	set_door_amount();
 }
 void gamemanger::character_amount()
 {
@@ -527,9 +544,16 @@ void gamemanger::play_game()
 		set_order();
 		print_drawing();
 		round_action();
+		open_door();
 	}
-
-	std::cout << "我贏了嗎??隨便啦..." << std::endl;
+	if (playingData_hero.hero_amount==0)
+	{
+		std::cout << "monster win~" << std::endl;
+	}
+	else
+	{
+		std::cout << "character win~" << std::endl;
+	}
 
 	clearPlayingdata();
 }
@@ -1135,7 +1159,7 @@ void gamemanger::hero_action(char &hero)//玩家行動
 								{
 									for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_type.size(); j++)
 									{
-										if (character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_type[j] != Action::Range && attack)
+										if (character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_type[j] != Action::Range && attack)
 										{
 											hero_action__deal(Action::Range, 1, attack_power, attack, hero);
 										}
@@ -1340,7 +1364,15 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 				{
 					if (playingData_hero.hero_status[i].icon==hero_icon)
 					{
-						if (PlayingData_map.visible(i, Monster[temp_s[0]].index) && PlayingData_map.countRange(i, Monster[temp_s[0]].index) <= power&&(!Monster[temp_s[0]].ifdead))
+						bool ha = false;
+						for (int j=0;j<active_monster.size();j++)
+						{
+							if (temp_s[0]==active_monster[j])
+							{
+								ha = true;
+							}
+						}
+						if (ha&&PlayingData_map.visible(i, Monster[temp_s[0]].index) && PlayingData_map.countRange(i, Monster[temp_s[0]].index) <= power&&(!Monster[temp_s[0]].ifdead))
 						{
 							attacked = true;
 							monster_takedamage(temp_s[0], hero_icon, attack_power);
@@ -1702,11 +1734,16 @@ void gamemanger::open_door()
 		bool Flag_print = 0;
 		for (auto c_pos : PlayingData_map.character_coordinate)
 		{
-			if (PlayingData_map.body[c_pos.y][c_pos.x] == '3')//角色座標在門上
+			for (int k=0;k<Map.door_coordinate.size();k++)
 			{
-				Flag_print = 1;
-				PlayingData_map.body[c_pos.y][c_pos.x] == '1';
-				PlayingData_map.Set_Sight(c_pos.y, c_pos.x);
+				if (c_pos.x == Map.door_coordinate[k].x && c_pos.y == Map.door_coordinate[k].y)//角色座標在門上
+				{
+					Flag_print = 1;
+					Map.door_coordinate.erase(Map.door_coordinate.begin()+k);
+					k--;
+					PlayingData_map.door_amount--;
+					PlayingData_map.Set_Sight(c_pos.y, c_pos.x);
+				}
 			}
 		}
 		if (Flag_print)
@@ -1717,6 +1754,7 @@ void gamemanger::open_door()
 }
 void gamemanger::clearPlayingdata()
 {
+	round.round_temp = 1;
 	PlayingData_monster.monster_status.clear();
 	PlayingData_map.character_coordinate.clear();
 	PlayingData_map.monster_coordinate.clear();
@@ -1725,5 +1763,16 @@ void gamemanger::clearPlayingdata()
 }
 bool gamemanger::gameover()/////判斷有沒有遊戲結束
 {
-	return true;
+	if (PlayingData_map.door_amount==0&&PlayingData_monster.monster_amount==0)
+	{
+		return false;
+	}
+	else if (playingData_hero.hero_amount==0)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
