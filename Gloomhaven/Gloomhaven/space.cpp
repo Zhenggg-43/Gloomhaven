@@ -1390,6 +1390,32 @@ void gamemanger::hero_takedamage(char monster_icon,char hero_icon, int damage)
 		}
 	}
 }
+void gamemanger::monster_takedamage(char monster_icon, char character_icon, int damage)
+{
+	//A attack a 3 damage, a shield 1, a remain 12 hp
+	std::cout << character_icon << " attack " << monster_icon << ' ' << damage << " damage, " << monster_icon << " shield " << Monster[monster_icon].round_gain.shield_gain << ", " << monster_icon << " remain ";
+	if (Monster[monster_icon].round_gain.shield_gain<damage)
+	{
+		damage -= Monster[monster_icon].round_gain.shield_gain;
+		Monster[monster_icon].hp -= damage;
+	}
+
+	std::cout << Monster[monster_icon].hp << " hp\n";
+	if (Monster[monster_icon].hp <= 0)
+	{
+		Monster[monster_icon].ifdead = 1;
+		PlayingData_map.monster_killed(Monster[monster_icon].index);
+		for (std::vector<char>::iterator i = round.action_creature_icon.begin();i < round.action_creature_icon.end();i++)
+		{
+			if (*i == monster_icon)
+			{
+				round.action_creature_icon.erase(i);
+			}
+		}
+		std::cout << monster_icon << " is killed!!\n";
+		PlayingData_map.Print_Sightedmap();
+	}
+}
 void gamemanger::remove_dead_hero(char hero_icon)
 {
 	for (int i =0;i<playingData_hero.hero_amount;i++)
