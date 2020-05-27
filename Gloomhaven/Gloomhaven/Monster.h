@@ -57,7 +57,7 @@ class monster
 public:
 	int index=0;
 
-	bool ifdead;
+	bool ifdead=0;
 	std::string name;
 	char icon;
 	int hp_max, power, range;

@@ -1430,11 +1430,10 @@ void gamemanger::monster_takedamage(char monster_icon, char character_icon, int 
 	std::cout << Monster[monster_icon].hp << " hp\n";
 	if (Monster[monster_icon].hp <= 0)
 	{
-		Monster[monster_icon].ifdead = 1;
-		PlayingData_map.monster_killed(Monster[monster_icon].index);
-		remove_action_icon(monster_icon);
+		Monster[monster_icon].ifdead = 1;//死亡
+		PlayingData_map.monster_killed(Monster[monster_icon].index);//從地圖上磨除
+		remove_action_icon(monster_icon);//從行動柱列中移除
 		active_monster_amount--;
-		PlayingData_monster.monster_amount--;
 		for (int k = 0;k < active_monster_amount;k++)
 		{
 			if (monster_icon == active_monster[k])
@@ -1443,6 +1442,8 @@ void gamemanger::monster_takedamage(char monster_icon, char character_icon, int 
 				break;
 			}
 		}
+		
+		PlayingData_monster.monster_amount--;
 		std::cout << monster_icon << " is killed!!\n";
 		PlayingData_map.Print_Sightedmap();
 	}
@@ -1743,6 +1744,7 @@ void gamemanger::open_door()
 					k--;
 					PlayingData_map.door_amount--;
 					PlayingData_map.Set_Sight(c_pos.y, c_pos.x);
+					set_monster_active();
 				}
 			}
 		}
