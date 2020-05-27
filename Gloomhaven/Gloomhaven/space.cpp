@@ -395,7 +395,7 @@ void gamemanger::load_map()
 	PlayingData_monster.monster_amount = PlayingData_monster.monster_status.size();
 
 	//std::cout <<std::endl<< PlayingData_monster.monster_amount<<std::endl;
-	PlayingData_monster.printAllmonster();
+	//PlayingData_monster.printAllmonster();
 	std::cout << "你輸入了地圖你真棒!!" << std::endl;
 }
 
@@ -517,8 +517,6 @@ void gamemanger::play_game()
 	//設定起始位置
 	set_startpos();
 	set_monster_active();
-	PlayingData_map.visible(2, 0);
-	PlayingData_map.Print_Allmap();
 	//////////////////
 	std::cin.ignore();
 	while (gameover())
@@ -1342,7 +1340,7 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 				{
 					if (playingData_hero.hero_status[i].icon==hero_icon)
 					{
-						if (PlayingData_map.visible(i, Monster[temp_s[0]].index) && PlayingData_map.countRange(i, Monster[temp_s[0]].index) <= power)
+						if (PlayingData_map.visible(i, Monster[temp_s[0]].index) && PlayingData_map.countRange(i, Monster[temp_s[0]].index) <= power&&(!Monster[temp_s[0]].ifdead))
 						{
 							attacked = true;
 							monster_takedamage(temp_s[0], hero_icon, attack_power);
@@ -1402,11 +1400,15 @@ void gamemanger::monster_takedamage(char monster_icon, char character_icon, int 
 	{
 		Monster[monster_icon].ifdead = 1;
 		PlayingData_map.monster_killed(Monster[monster_icon].index);
-		for (std::vector<char>::iterator i = round.action_creature_icon.begin();i < round.action_creature_icon.end();i++)
+		remove_action_icon(monster_icon);
+		active_monster_amount--;
+		PlayingData_monster.monster_amount--;
+		for (int k = 0;k < active_monster_amount;k++)
 		{
-			if (*i == monster_icon)
+			if (monster_icon == active_monster[k])
 			{
-				round.action_creature_icon.erase(i);
+				active_monster.erase(active_monster.begin() + k);
+				break;
 			}
 		}
 		std::cout << monster_icon << " is killed!!\n";
@@ -1449,11 +1451,151 @@ void gamemanger::monster_action(const char &icon)//敵人行動
 	{
 		if (skill.type == Action::Attack)
 		{
-			std::cout << "怪物Attack!!!!\n";
 			Monster[icon].round_gain.power_gain += skill.attack.attpower;//攻擊增益
 			//char Map.attack_function (monster index,charater index)
 			//if lock (a lock A in distance 3) return 'A'
 			//else (no one lock) return'0'
+			char target='0';
+			int nearest_d=99999999;
+			int fastest = 100;
+			if (Monster[icon].range == 0 || Monster[icon].range + skill.attack.range == 1)//近戰
+			{
+				int m_xpos = Map.monster_coordinate[Monster[icon].index].x, m_ypos = Map.monster_coordinate[Monster[icon].index].y;
+				//決定目標
+				if (m_xpos + 1 < Map.X_border)//在地圖範圍內
+				{
+					if (Map.body[m_ypos][m_xpos + 1] >= 'A'&&Map.body[m_ypos][m_xpos + 1] <= 'Z')//位置有角色
+					{
+						char temp_c = Map.body[m_ypos][m_xpos + 1];
+						//搜索敏捷
+						for (int i = 0;i < round.action_creature_icon.size();i++)
+						{
+							if (round.action_creature_icon[i] == temp_c)
+							{
+								if (round.agility[i] < fastest)//敏捷最小為目標
+								{
+									fastest = round.agility[i];
+									target = temp_c;
+								}
+							}
+						}
+					}
+				}
+				if (m_xpos - 1 >= 0)//在地圖範圍內
+				{
+					if (Map.body[m_ypos][m_xpos - 1] >= 'A'&&Map.body[m_ypos][m_xpos - 1] <= 'Z')//位置有角色
+					{
+						char temp_c = Map.body[m_ypos][m_xpos - 1];
+						for (int i = 0;i < round.action_creature_icon.size();i++)
+						{
+							if (round.action_creature_icon[i] == temp_c)//搜索敏捷
+							{
+								if (round.agility[i] < fastest)//敏捷最小為目標
+								{
+									fastest = round.agility[i];
+									target = temp_c;
+								}
+							}
+						}
+					}
+				}
+				if (m_ypos + 1 < Map.Y_border)//在地圖範圍內
+				{
+					if (Map.body[m_ypos + 1][m_xpos] >= 'A'&&Map.body[m_ypos + 1][m_xpos] <= 'Z')//位置有角色
+					{
+						char temp_c = Map.body[m_ypos + 1][m_xpos];
+						for (int i = 0;i < round.action_creature_icon.size();i++)
+						{
+							if (round.action_creature_icon[i] == temp_c)//搜索敏捷
+							{
+								if (round.agility[i] < fastest)//敏捷最小為目標
+								{
+									fastest = round.agility[i];
+									target = temp_c;
+								}
+							}
+						}
+					}
+				}
+				if (m_ypos - 1 >= 0)//在地圖範圍內
+				{
+					if (Map.body[m_ypos - 1][m_xpos] >= 'A'&&Map.body[m_ypos - 1][m_xpos] <= 'Z')//位置有角色
+					{
+						char temp_c = Map.body[m_ypos - 1][m_xpos];
+						for (int i = 0;i < round.action_creature_icon.size();i++)
+						{
+							if (round.action_creature_icon[i] == temp_c)//搜索敏捷
+							{
+								if (round.agility[i] < fastest)//敏捷最小為目標
+								{
+									fastest = round.agility[i];
+									target = temp_c;
+								}
+							}
+						}
+					}
+				}
+				//動作
+				if (target == '0')
+				{
+					std::cout << "no one lock\n";
+				}
+				else
+				{
+					std::cout << icon << " lock " << target << " in distance 1" << std::endl;
+					hero_takedamage(icon, target, Monster[icon].power + Monster[icon].round_gain.power_gain);
+				}
+			}
+			else//遠程
+			{
+				//決定目標
+				for (int i=0;i<playingData_hero.hero_status.size();i++)
+				{
+					if (Map.countRange(i, Monster[icon].index) <= Monster[icon].range + skill.attack.range)//在攻擊範圍內
+					{
+						if (Map.visible(i, Monster[icon].index))//有視野
+						{
+							if (Map.countRange(i, Monster[icon].index) < nearest_d)//比距離
+							{
+								nearest_d = Map.countRange(i, Monster[icon].index);//distance
+								target = playingData_hero.hero_status[i].icon;//icon
+								for (int j = 0;j < round.action_creature_icon.size();j++)//agility
+								{
+									if (round.action_creature_icon[j] == playingData_hero.hero_status[j].icon)
+									{
+										fastest = round.agility[j];
+									}
+								}
+							}
+							else if (Map.countRange(i, Monster[icon].index) == nearest_d)
+							{
+								for (int j = 0;j < round.action_creature_icon.size();j++)//比敏捷
+								{
+									if (round.action_creature_icon[j] == playingData_hero.hero_status[j].icon)
+									{
+										if(round.agility[j]<fastest)
+										{
+											fastest = round.agility[j];//agility
+											target = playingData_hero.hero_status[i].icon;//icon
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				//動作
+				if (target == '0')
+				{
+					std::cout << "no one lock\n";
+				}
+				else
+				{
+					std::cout << icon << " lock " << target << " in distance " << nearest_d << std::endl;
+					hero_takedamage(icon, target, Monster[icon].power + Monster[icon].round_gain.power_gain);
+				}
+			}
+
 			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
 			{
 				getchar();
@@ -1528,8 +1670,7 @@ void gamemanger::set_startpos()
 	{
 		iconstr.push_back(i.icon);
 	}
-	std::cout << iconstr << std::endl;
-	PlayingData_map.Print_Allmap();
+	//PlayingData_map.Print_Allmap();
 	PlayingData_map.Set_Monsterpos(iconstr);
 	PlayingData_map.Set_Characterpos(playingData_hero.hero_amount);
 	PlayingData_map.Print_Sightedmap();
@@ -1551,6 +1692,26 @@ void gamemanger::set_monster_active()//Map set sight 之後要用!!!!!!!!!!
 					Monster.monster_status[i].hand.push_back(j);//設定起始手排cardVec
 				}
 			}
+		}
+	}
+}
+void gamemanger::open_door()
+{
+	if (active_monster_amount == 0)//當前關卡無怪物
+	{
+		bool Flag_print = 0;
+		for (auto c_pos : PlayingData_map.character_coordinate)
+		{
+			if (PlayingData_map.body[c_pos.y][c_pos.x] == '3')//角色座標在門上
+			{
+				Flag_print = 1;
+				PlayingData_map.body[c_pos.y][c_pos.x] == '1';
+				PlayingData_map.Set_Sight(c_pos.y, c_pos.x);
+			}
+		}
+		if (Flag_print)
+		{
+			PlayingData_map.Print_Sightedmap();
 		}
 	}
 }

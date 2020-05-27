@@ -503,7 +503,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 	const double m = ((double)(character_coordinate[C_index].y - monster_coordinate[M_index].y)) / ((double)(character_coordinate[C_index].x - monster_coordinate[M_index].x));
 	const double c = (((double)monster_coordinate[M_index].y + 0.5) - m * ((double)monster_coordinate[M_index].x + 0.5));
 	const int dx = (character_coordinate[C_index].x - monster_coordinate[M_index].x);
-	cout << "m: " << m << "c: " << c << endl;
+	//cout << "m: " << m << "c: " << c << endl;
 
 	double ytmp;
 	if (dx > 0)
