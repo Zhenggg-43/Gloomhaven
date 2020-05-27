@@ -551,6 +551,7 @@ void gamemanger::hero_turn()
 		}
 	}
 	//////////
+	std::cout << "請輸入角色與卡牌" << std::endl;//回合提示
 	std::stringstream ss;
 	std::string temp_s="";
 	int temp_i = 0;
@@ -1344,7 +1345,7 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 						if (PlayingData_map.visible(i, Monster[temp_s[0]].index) && PlayingData_map.countRange(i, Monster[temp_s[0]].index) <= power)
 						{
 							attacked = true;
-							std::cout << "打傷害摟!!" << std::endl;///
+							monster_takedamage(temp_s[0], hero_icon, attack_power);
 						}
 						else
 						{
@@ -1372,11 +1373,7 @@ void gamemanger::hero_takedamage(char monster_icon,char hero_icon, int damage)
 		if (hero_icon==playingData_hero.hero_status[i].icon)
 		{
 			std::cout << monster_icon << " attack " << hero_icon << " " << damage << " damage, " << hero_icon << " shield " << playingData_hero.hero_status[i].shield << ", " << hero_icon << " remain ";
-			if (playingData_hero.hero_status[i].shield>=damage)
-			{
-				playingData_hero.hero_status[i].shield -= damage;
-			}
-			else
+			if(playingData_hero.hero_status[i].shield<damage)
 			{
 				damage -= playingData_hero.hero_status[i].shield;
 				playingData_hero.hero_status[i].hp -= damage;
@@ -1424,11 +1421,23 @@ void gamemanger::remove_dead_hero(char hero_icon)
 		{
 			playingData_hero.hero_status.erase(playingData_hero.hero_status.begin()+i);
 			PlayingData_map.character_killed(i);
+			remove_action_icon(hero_icon);
 			std::cout <<hero_icon<<" is killed"<<std::endl;
+			PlayingData_map.Print_Sightedmap();
 			break;
 		}
 	}
 	playingData_hero.hero_amount--;
+}
+void gamemanger::remove_action_icon(char icon)
+{
+	for (int i=0;i<round.action_creature_icon.size();i++)
+	{
+		if (round.action_creature_icon[i]==icon)
+		{
+			round.action_creature_icon[i] = '0';
+		}
+	}
 }
 
 void gamemanger::monster_action(const char &icon)//敵人行動

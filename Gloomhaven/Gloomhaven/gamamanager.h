@@ -126,6 +126,7 @@ public:
 	void hero_takedamage(char,char,int);//給予英雄傷害
 	void monster_takedamage(char,char, int);//給予怪物傷害
 	void remove_dead_hero(char);//死亡英雄移除
+	void remove_action_icon(char);//死亡生物從行動列中移除
 
 	void open_door();//判斷是否開門
 	void re_sight();//開門後重新設定視野
