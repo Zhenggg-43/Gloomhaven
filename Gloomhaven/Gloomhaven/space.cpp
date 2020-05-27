@@ -1433,8 +1433,9 @@ void gamemanger::monster_takedamage(char monster_icon, char character_icon, int 
 		Monster[monster_icon].ifdead = 1;//死亡
 		PlayingData_map.monster_killed(Monster[monster_icon].index);//從地圖上磨除
 		remove_action_icon(monster_icon);//從行動柱列中移除
+
 		active_monster_amount--;
-		for (int k = 0;k < active_monster_amount;k++)
+		for (int k = 0;k <= active_monster_amount;k++)
 		{
 			if (monster_icon == active_monster[k])
 			{
@@ -1594,7 +1595,7 @@ void gamemanger::monster_action(const char &icon)//敵人行動
 								target = playingData_hero.hero_status[i].icon;//icon
 								for (int j = 0;j < round.action_creature_icon.size();j++)//agility
 								{
-									if (round.action_creature_icon[j] == playingData_hero.hero_status[j].icon)
+									if (round.action_creature_icon[j] == playingData_hero.hero_status[i].icon)
 									{
 										fastest = round.agility[j];
 									}
@@ -1710,7 +1711,7 @@ void gamemanger::set_startpos()
 }
 void gamemanger::set_monster_active()//Map set sight 之後要用!!!!!!!!!!
 {
-	for (int i = 0;i < PlayingData_monster.monster_amount;i++)
+	for (int i = 0;i < PlayingData_monster.monster_status.size();i++)
 	{
 		int X= Map.monster_coordinate[i].x, Y= Map.monster_coordinate[i].y;
 		if (!Monster.monster_status[i].ifdead)
