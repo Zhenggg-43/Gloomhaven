@@ -49,7 +49,6 @@ public:
 //遊戲中資料
 struct Round_gain
 {
-	int power_gain = 0;
 	int shield_gain = 0;
 };
 class monster
@@ -74,6 +73,7 @@ class All_monster
 {
 public:
 	void printAllmonster();
+	void printcheck(std::vector<char> acting_mon);
 	void printmonstercard(char,int);
 	monster& operator[](char);
 

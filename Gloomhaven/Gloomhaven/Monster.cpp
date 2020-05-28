@@ -69,6 +69,19 @@ void All_monster::printAllmonster()
 		std::cout << std::endl;
 	}
 }
+void All_monster::printcheck(vector<char> acting_mon)
+{
+	for (auto monsterf:monster_status)
+	{
+		for (auto icon : acting_mon)
+		{
+			if (icon == monsterf.icon)
+			{
+				cout << icon << " hp: " << monsterf.hp << ", shield: " << monsterf.round_gain.shield_gain << endl;
+			}
+		}
+	}
+}
 void All_monster::printmonstercard(char icon, int card_Vecindex)
 {
 	for (auto monster : monster_status)
