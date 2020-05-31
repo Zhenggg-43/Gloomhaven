@@ -39,16 +39,20 @@ bool gamemanger::whether_play()
 
 void gamemanger::loadgame()
 {
-	temp_function();
+	/*temp_function();*/
 	set_debugmode();
 	load_file();
 }
-void gamemanger::temp_function()
+void gamemanger::temp_function(std::string character_txtname, std::string monster_txtname,int mod)
 {
-	std::cout << "請輸入角色txt檔案" << std::endl;
+	/*std::cout << "請輸入角色txt檔案" << std::endl;
 	std::cin >> character_txt;
 	std::cout << "請輸入怪物txt檔案" << std::endl;
-	std::cin >> monster_txt;
+	std::cin >> monster_txt;*/
+	//std::cout << character_txtname << "  " << monster_txtname << " " <<mod << std::endl;
+	character_txt = character_txtname;
+	monster_txt = monster_txtname;
+	Flag_DebugMode = mod;
 }
 void gamemanger::load_file()
 {
@@ -250,7 +254,7 @@ void gamemanger::load_monster()
 }
 void gamemanger::set_debugmode() 
 {
-	std::cout << "是否要要啟用Debug Mode (0/1)\n";
+	/*std::cout << "是否要要啟用Debug Mode (0/1)\n";
 	std::string input;
 	while (std::cin >> input)
 	{
@@ -268,7 +272,7 @@ void gamemanger::set_debugmode()
 		{
 			std::cout << "輸入錯誤!!!\n";
 		}
-	}
+	}*/
 }
 void gamemanger::load_map()
 {
@@ -554,6 +558,7 @@ void gamemanger::play_game()
 	{
 		std::cout << "character win~" << std::endl;
 	}
+
 	clearPlayingdata();
 }
 void gamemanger::print_round()
@@ -793,6 +798,8 @@ void gamemanger::monster_turn()
 	}
 }
 
+
+
 void gamemanger::set_order()//依照敏捷設定順序
 {
 	//
@@ -1016,6 +1023,9 @@ void gamemanger::print_drawing()//輸出行動順序
 		
 	}
 }
+
+
+
 void gamemanger::round_action()
 {
 	for (int i = 0; i < round.action_creature_icon.size(); i++)
@@ -1081,6 +1091,11 @@ void gamemanger::hero_action(char &hero)//玩家行動
 				int attack_power = 0;
 				while (std::getline(std::cin, temp_s))
 				{
+					if (temp_s == "check")
+					{
+						print_check();
+						continue;
+					}
 					if (temp_s.size() == 2)
 					{
 						if ((temp_s[0] - '0' == playingData_hero.hero_status[i].action_card[0] || temp_s[0] - '0' == playingData_hero.hero_status[i].action_card[1]) && (temp_s[1] == 'u' || temp_s[1] == 'd'))
@@ -1248,23 +1263,28 @@ void gamemanger::hero_action(char &hero)//玩家行動
 		}
 	}
 }
-void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &attack,char &hero_icon)
+void gamemanger::hero_action__deal(int type, int power, int& attack_power, bool& attack, char& hero_icon)
 {
 	if (type == Action::Attack)
 	{
 		attack = true;
 		attack_power = power;
 	}
-	else if(type == Action::Move)
+	else if (type == Action::Move)
 	{
 		std::cout << "Move " << power << std::endl;
 		std::string temp_s;
 		bool ac = true;
 		while (std::getline(std::cin, temp_s))
 		{
-			if (power>=temp_s.size()&&temp_s.size()>0)
+			if (temp_s=="check")
 			{
-				if (temp_s[0]=='e')
+				print_check();
+				continue;
+			}
+			if (power >= temp_s.size() && temp_s.size() > 0)
+			{
+				if (temp_s[0] == 'e')
 				{
 					break;
 				}
@@ -1279,14 +1299,14 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 				if (ac)
 				{
 					int temp_i = 0;
-					for (int i=0;i<playingData_hero.hero_amount;i++)
+					for (int i = 0; i < playingData_hero.hero_amount; i++)
 					{
-						if (playingData_hero.hero_status[i].icon==hero_icon)
+						if (playingData_hero.hero_status[i].icon == hero_icon)
 						{
 							temp_i = i;
 						}
 					}
-					if (PlayingData_map.character_Move(temp_i,hero_icon, temp_s))
+					if (PlayingData_map.character_Move(temp_i, hero_icon, temp_s))
 					{
 						PlayingData_map.Print_Sightedmap();
 						break;
@@ -1309,17 +1329,17 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 	}
 	else if (type == Action::Heal)
 	{
-		std::cout <<hero_icon<< " heal " << power <<", now hp is ";
+		std::cout << hero_icon << " heal " << power << ", now hp is ";
 		for (int i = 0; i < playingData_hero.hero_amount; i++)
 		{
 			if (playingData_hero.hero_status[i].icon == hero_icon)
 			{
 				playingData_hero.hero_status[i].hp += power;
-				for (int j=0;j<character_file.character_amount;j++)
+				for (int j = 0; j < character_file.character_amount; j++)
 				{
-					if (playingData_hero.hero_status[i].name== character_file.name[j])
+					if (playingData_hero.hero_status[i].name == character_file.name[j])
 					{
-						if (playingData_hero.hero_status[i].hp> character_file.hp[j])
+						if (playingData_hero.hero_status[i].hp > character_file.hp[j])
 						{
 							playingData_hero.hero_status[i].hp = character_file.hp[j];
 						}
@@ -1352,26 +1372,31 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 		std::string temp_s;
 		while (std::getline(std::cin, temp_s))
 		{
+			if (temp_s == "check")
+			{
+				print_check();
+				continue;
+			}
 			if (temp_s.size() == 1)
 			{
 				bool attacked = false;
-				if (temp_s[0]=='0')
+				if (temp_s[0] == '0')
 				{
 					break;
 				}
-				for (int i=0;i<playingData_hero.hero_amount;i++)
+				for (int i = 0; i < playingData_hero.hero_amount; i++)
 				{
-					if (playingData_hero.hero_status[i].icon==hero_icon)
+					if (playingData_hero.hero_status[i].icon == hero_icon)
 					{
 						bool ha = false;
-						for (int j=0;j<active_monster.size();j++)
+						for (int j = 0; j < active_monster.size(); j++)
 						{
-							if (temp_s[0]==active_monster[j])
+							if (temp_s[0] == active_monster[j])
 							{
 								ha = true;
 							}
 						}
-						if (ha&&PlayingData_map.visible(i, Monster[temp_s[0]].index) && PlayingData_map.countRange(i, Monster[temp_s[0]].index) <= power&&(!Monster[temp_s[0]].ifdead))
+						if (ha && PlayingData_map.visible(i, Monster[temp_s[0]].index) && PlayingData_map.countRange(i, Monster[temp_s[0]].index) <= power && (!Monster[temp_s[0]].ifdead))
 						{
 							attacked = true;
 							monster_takedamage(temp_s[0], hero_icon, attack_power);
@@ -1395,10 +1420,228 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 		}
 	}
 }
+void gamemanger::print_check()
+{
+	for (int i=0;i<playingData_hero.hero_amount;i++)
+	{
+		std::cout<< playingData_hero.hero_status[i].icon << " hp: " << playingData_hero.hero_status[i].hp << ", shield: " << playingData_hero.hero_status[i].shield << std::endl;
+	}
+	PlayingData_monster.printcheck(active_monster);
+}
+void gamemanger::monster_action(const char& icon)//敵人行動
+{
+	Monster[icon].round_gain.shield_gain = 0;
+	int card_index = Monster[icon].drew_card;
+	for (auto skill : Monster[icon].cards[card_index].skill)//執行指定怪物 指定卡牌的技能
+	{
+		if (skill.type == Action::Attack)
+		{
+			char target = '0';
+			int nearest_d = 99999999;
+			int fastest = 100;
+			if (Monster[icon].range == 0 || Monster[icon].range + skill.attack.range == 1)//近戰
+			{
+				int m_xpos = Map.monster_coordinate[Monster[icon].index].x, m_ypos = Map.monster_coordinate[Monster[icon].index].y;
+				//決定目標
+				if (m_xpos + 1 < Map.X_border)//在地圖範圍內
+				{
+					if (Map.body[m_ypos][m_xpos + 1] >= 'A' && Map.body[m_ypos][m_xpos + 1] <= 'Z')//位置有角色
+					{
+						char temp_c = Map.body[m_ypos][m_xpos + 1];
+						//搜索敏捷
+						for (int i = 0; i < round.action_creature_icon.size(); i++)
+						{
+							if (round.action_creature_icon[i] == temp_c)
+							{
+								if (round.agility[i] < fastest)//敏捷最小為目標
+								{
+									fastest = round.agility[i];
+									target = temp_c;
+								}
+							}
+						}
+					}
+				}
+				if (m_xpos - 1 >= 0)//在地圖範圍內
+				{
+					if (Map.body[m_ypos][m_xpos - 1] >= 'A' && Map.body[m_ypos][m_xpos - 1] <= 'Z')//位置有角色
+					{
+						char temp_c = Map.body[m_ypos][m_xpos - 1];
+						for (int i = 0; i < round.action_creature_icon.size(); i++)
+						{
+							if (round.action_creature_icon[i] == temp_c)//搜索敏捷
+							{
+								if (round.agility[i] < fastest)//敏捷最小為目標
+								{
+									fastest = round.agility[i];
+									target = temp_c;
+								}
+							}
+						}
+					}
+				}
+				if (m_ypos + 1 < Map.Y_border)//在地圖範圍內
+				{
+					if (Map.body[m_ypos + 1][m_xpos] >= 'A' && Map.body[m_ypos + 1][m_xpos] <= 'Z')//位置有角色
+					{
+						char temp_c = Map.body[m_ypos + 1][m_xpos];
+						for (int i = 0; i < round.action_creature_icon.size(); i++)
+						{
+							if (round.action_creature_icon[i] == temp_c)//搜索敏捷
+							{
+								if (round.agility[i] < fastest)//敏捷最小為目標
+								{
+									fastest = round.agility[i];
+									target = temp_c;
+								}
+							}
+						}
+					}
+				}
+				if (m_ypos - 1 >= 0)//在地圖範圍內
+				{
+					if (Map.body[m_ypos - 1][m_xpos] >= 'A' && Map.body[m_ypos - 1][m_xpos] <= 'Z')//位置有角色
+					{
+						char temp_c = Map.body[m_ypos - 1][m_xpos];
+						for (int i = 0; i < round.action_creature_icon.size(); i++)
+						{
+							if (round.action_creature_icon[i] == temp_c)//搜索敏捷
+							{
+								if (round.agility[i] < fastest)//敏捷最小為目標
+								{
+									fastest = round.agility[i];
+									target = temp_c;
+								}
+							}
+						}
+					}
+				}
+				//動作
+				if (target == '0')
+				{
+					std::cout << "no one lock\n";
+				}
+				else
+				{
+					std::cout << icon << " lock " << target << " in distance 1" << std::endl;
+					hero_takedamage(icon, target, Monster[icon].power + skill.attack.attpower);
+				}
+			}
+			else//遠程
+			{
+				//決定目標
+				for (int i = 0; i < playingData_hero.hero_status.size(); i++)
+				{
+					if (Map.countRange(i, Monster[icon].index) <= Monster[icon].range + skill.attack.range)//在攻擊範圍內
+					{
+						if (Map.visible(i, Monster[icon].index))//有視野
+						{
+							if (Map.countRange(i, Monster[icon].index) < nearest_d)//比距離
+							{
+								nearest_d = Map.countRange(i, Monster[icon].index);//distance
+								target = playingData_hero.hero_status[i].icon;//icon
+								for (int j = 0; j < round.action_creature_icon.size(); j++)//agility
+								{
+									if (round.action_creature_icon[j] == playingData_hero.hero_status[i].icon)
+									{
+										fastest = round.agility[j];
+									}
+								}
+							}
+							else if (Map.countRange(i, Monster[icon].index) == nearest_d)
+							{
+								for (int j = 0; j < round.action_creature_icon.size(); j++)//比敏捷
+								{
+									if (round.action_creature_icon[j] == playingData_hero.hero_status[j].icon)
+									{
+										if (round.agility[j] < fastest)
+										{
+											fastest = round.agility[j];//agility
+											target = playingData_hero.hero_status[i].icon;//icon
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				//動作
+				if (target == '0')
+				{
+					std::cout << "no one lock\n";
+				}
+				else
+				{
+					std::cout << icon << " lock " << target << " in distance " << nearest_d << std::endl;
+					hero_takedamage(icon, target, Monster[icon].power + skill.attack.attpower);
+				}
+			}
+
+			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
+			{
+				getchar();
+			}
+		}
+		else if (skill.type == Action::Heal)
+		{
+			Monster[icon].hp += skill.skillpower;
+			if (Monster[icon].hp > Monster[icon].hp_max)//回復超過則修正
+			{
+				Monster[icon].hp = Monster[icon].hp_max;
+			}
+			std::cout << icon << ' ' << "heal " << skill.skillpower << ", now hp is " << Monster[icon].hp << std::endl;
+			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
+			{
+				getchar();
+			}
+		}
+		else if (skill.type == Action::Move)
+		{
+			PlayingData_map.creature_Move(Monster[icon].index, icon, skill.movement);
+			PlayingData_map.Print_Sightedmap();
+			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
+			{
+				getchar();
+			}
+		}
+		else if (skill.type == Action::Shield)
+		{
+			Monster[icon].round_gain.shield_gain += skill.skillpower;
+			std::cout << icon << ' ' << "shield " << skill.skillpower << " this turn\n";
+			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
+			{
+				getchar();
+			}
+		}
+	}
+	//處理手牌與棄牌
+	if (Monster[icon].cards[card_index].suffle_sign == 1)//有重洗標誌將牌組重製????????????????????????????????/
+	{
+		Monster[icon].hand.clear();
+		for (int i = 0; i < Monster[icon].cards.size(); i++)
+		{
+			Monster[icon].hand.push_back(i);
+		}
+	}
+	else//沒有 將牌移至棄牌堆
+	{
+		Monster[icon].discard.push_back(Monster[icon].drew_card);
+
+		for (std::vector<int>::iterator hand = PlayingData_monster[icon].hand.begin(); hand < Monster[icon].hand.end(); hand++)
+		{
+			if (*hand == Monster[icon].drew_card)
+			{
+				Monster[icon].hand.erase(hand);//清除
+				break;
+			}
+		}
+	}
+}
+
+
+
 void gamemanger::hero_takedamage(char monster_icon,char hero_icon, int damage)
 {
-	if (damage < 0)//攻擊為負數修正
-		damage = 0;
 	for (int i=0;i<playingData_hero.hero_amount;i++)
 	{
 		if (hero_icon==playingData_hero.hero_status[i].icon)
@@ -1421,8 +1664,6 @@ void gamemanger::hero_takedamage(char monster_icon,char hero_icon, int damage)
 void gamemanger::monster_takedamage(char monster_icon, char character_icon, int damage)
 {
 	//A attack a 3 damage, a shield 1, a remain 12 hp
-	if (damage < 0)//攻擊為負數修正
-		damage = 0;
 	std::cout << character_icon << " attack " << monster_icon << ' ' << damage << " damage, " << monster_icon << " shield " << Monster[monster_icon].round_gain.shield_gain << ", " << monster_icon << " remain ";
 	if (Monster[monster_icon].round_gain.shield_gain<damage)
 	{
@@ -1436,9 +1677,7 @@ void gamemanger::monster_takedamage(char monster_icon, char character_icon, int 
 		Monster[monster_icon].ifdead = 1;//死亡
 		PlayingData_map.monster_killed(Monster[monster_icon].index);//從地圖上磨除
 		remove_action_icon(monster_icon);//從行動柱列中移除
-
-		active_monster_amount--;
-		for (int k = 0;k <= active_monster_amount;k++)
+		for (int k = 0;k < active_monster_amount;k++)
 		{
 			if (monster_icon == active_monster[k])
 			{
@@ -1446,7 +1685,7 @@ void gamemanger::monster_takedamage(char monster_icon, char character_icon, int 
 				break;
 			}
 		}
-		
+		active_monster_amount--;
 		PlayingData_monster.monster_amount--;
 		std::cout << monster_icon << " is killed!!\n";
 		PlayingData_map.Print_Sightedmap();
@@ -1479,226 +1718,8 @@ void gamemanger::remove_action_icon(char icon)
 	}
 }
 
-void gamemanger::monster_action(const char &icon)//敵人行動
-{
-	Monster[icon].round_gain.power_gain = 0;
-	Monster[icon].round_gain.shield_gain = 0;
-	int card_index = Monster[icon].drew_card;
-	for (auto skill : Monster[icon].cards[card_index].skill)//執行指定怪物 指定卡牌的技能
-	{
-		if (skill.type == Action::Attack)
-		{
-			Monster[icon].round_gain.power_gain += skill.attack.attpower;//攻擊增益
-			//char Map.attack_function (monster index,charater index)
-			//if lock (a lock A in distance 3) return 'A'
-			//else (no one lock) return'0'
-			char target='0';
-			int nearest_d=99999999;
-			int fastest = 100;
-			if (Monster[icon].range == 0 || Monster[icon].range + skill.attack.range == 1)//近戰
-			{
-				int m_xpos = Map.monster_coordinate[Monster[icon].index].x, m_ypos = Map.monster_coordinate[Monster[icon].index].y;
-				//決定目標
-				if (m_xpos + 1 < Map.X_border)//在地圖範圍內
-				{
-					if (Map.body[m_ypos][m_xpos + 1] >= 'A'&&Map.body[m_ypos][m_xpos + 1] <= 'Z')//位置有角色
-					{
-						char temp_c = Map.body[m_ypos][m_xpos + 1];
-						//搜索敏捷
-						for (int i = 0;i < round.action_creature_icon.size();i++)
-						{
-							if (round.action_creature_icon[i] == temp_c)
-							{
-								if (round.agility[i] < fastest)//敏捷最小為目標
-								{
-									fastest = round.agility[i];
-									target = temp_c;
-								}
-							}
-						}
-					}
-				}
-				if (m_xpos - 1 >= 0)//在地圖範圍內
-				{
-					if (Map.body[m_ypos][m_xpos - 1] >= 'A'&&Map.body[m_ypos][m_xpos - 1] <= 'Z')//位置有角色
-					{
-						char temp_c = Map.body[m_ypos][m_xpos - 1];
-						for (int i = 0;i < round.action_creature_icon.size();i++)
-						{
-							if (round.action_creature_icon[i] == temp_c)//搜索敏捷
-							{
-								if (round.agility[i] < fastest)//敏捷最小為目標
-								{
-									fastest = round.agility[i];
-									target = temp_c;
-								}
-							}
-						}
-					}
-				}
-				if (m_ypos + 1 < Map.Y_border)//在地圖範圍內
-				{
-					if (Map.body[m_ypos + 1][m_xpos] >= 'A'&&Map.body[m_ypos + 1][m_xpos] <= 'Z')//位置有角色
-					{
-						char temp_c = Map.body[m_ypos + 1][m_xpos];
-						for (int i = 0;i < round.action_creature_icon.size();i++)
-						{
-							if (round.action_creature_icon[i] == temp_c)//搜索敏捷
-							{
-								if (round.agility[i] < fastest)//敏捷最小為目標
-								{
-									fastest = round.agility[i];
-									target = temp_c;
-								}
-							}
-						}
-					}
-				}
-				if (m_ypos - 1 >= 0)//在地圖範圍內
-				{
-					if (Map.body[m_ypos - 1][m_xpos] >= 'A'&&Map.body[m_ypos - 1][m_xpos] <= 'Z')//位置有角色
-					{
-						char temp_c = Map.body[m_ypos - 1][m_xpos];
-						for (int i = 0;i < round.action_creature_icon.size();i++)
-						{
-							if (round.action_creature_icon[i] == temp_c)//搜索敏捷
-							{
-								if (round.agility[i] < fastest)//敏捷最小為目標
-								{
-									fastest = round.agility[i];
-									target = temp_c;
-								}
-							}
-						}
-					}
-				}
-				//動作
-				if (target == '0')
-				{
-					std::cout << "no one lock\n";
-				}
-				else
-				{
-					std::cout << icon << " lock " << target << " in distance 1" << std::endl;
-					int temp_d = Monster[icon].power + Monster[icon].round_gain.power_gain;
-					if (temp_d < 0)
-						temp_d = 0;
-					hero_takedamage(icon, target, temp_d);
-				}
-			}
-			else//遠程
-			{
-				//決定目標
-				for (int i=0;i<playingData_hero.hero_status.size();i++)
-				{
-					if (Map.countRange(i, Monster[icon].index) <= Monster[icon].range + skill.attack.range)//在攻擊範圍內
-					{
-						if (Map.visible(i, Monster[icon].index))//有視野
-						{
-							if (Map.countRange(i, Monster[icon].index) < nearest_d)//比距離
-							{
-								nearest_d = Map.countRange(i, Monster[icon].index);//distance
-								target = playingData_hero.hero_status[i].icon;//icon
-								for (int j = 0;j < round.action_creature_icon.size();j++)//agility
-								{
-									if (round.action_creature_icon[j] == playingData_hero.hero_status[i].icon)
-									{
-										fastest = round.agility[j];
-									}
-								}
-							}
-							else if (Map.countRange(i, Monster[icon].index) == nearest_d)
-							{
-								for (int j = 0;j < round.action_creature_icon.size();j++)//比敏捷
-								{
-									if (round.action_creature_icon[j] == playingData_hero.hero_status[j].icon)
-									{
-										if(round.agility[j]<fastest)
-										{
-											fastest = round.agility[j];//agility
-											target = playingData_hero.hero_status[i].icon;//icon
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				//動作
-				if (target == '0')
-				{
-					std::cout << "no one lock\n";
-				}
-				else
-				{
-					std::cout << icon << " lock " << target << " in distance " << nearest_d << std::endl;
-					int temp_d = Monster[icon].power + Monster[icon].round_gain.power_gain;//攻擊為負數修正
-					if (temp_d < 0)
-						temp_d = 0;
-					hero_takedamage(icon, target, temp_d);
-				}
-			}
 
-			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
-			{
-				getchar();
-			}
-		}
-		else if (skill.type == Action::Heal)
-		{
-			Monster[icon].hp += skill.skillpower;
-			if (Monster[icon].hp > Monster[icon].hp_max)//回復超過則修正
-			{
-				Monster[icon].hp = Monster[icon].hp_max;
-			}
-			std::cout << icon << ' ' << "heal " << skill.skillpower << ", now hp is" << Monster[icon].hp << std::endl;
-			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
-			{
-				getchar();
-			}
-		}
-		else if (skill.type == Action::Move)
-		{
-			PlayingData_map.creature_Move(Monster[icon].index, icon, skill.movement);
-			PlayingData_map.Print_Sightedmap();
-			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
-			{
-				getchar();
-			}
-		}
-		else if (skill.type == Action::Shield)
-		{
-			Monster[icon].round_gain.shield_gain += skill.skillpower;
-			std::cout << icon << ' ' <<"shield "<< skill.skillpower <<  " this turn\n";
-			if (!Flag_DebugMode)//normalMode 需要GETCHAR等戴
-			{
-				getchar();
-			}
-		}
-	}
-	//處理手牌與棄牌
-	if (Monster[icon].cards[card_index].suffle_sign == 1)//有重洗標誌將牌組重製????????????????????????????????/
-	{
-		Monster[icon].hand.clear();
-		for (int i = 0;i < Monster[icon].cards.size();i++)
-		{
-			Monster[icon].hand.push_back(i);
-		}
-	}
-	else//沒有 將牌移至棄牌堆
-	{
-		Monster[icon].discard.push_back(Monster[icon].drew_card);
 
-		for (std::vector<int>::iterator hand = PlayingData_monster[icon].hand.begin();hand < Monster[icon].hand.end();hand++)
-		{
-			if (*hand == Monster[icon].drew_card)
-			{
-				Monster[icon].hand.erase(hand);//清除
-				break;
-			}
-		}
-	}
-}
 void gamemanger::deal_nextround()//處理每一輪攻擊的重製例如判斷死亡
 {
 	for (int i=0;i<playingData_hero.hero_amount;i++)//清空所有英雄的護甲值
@@ -1770,7 +1791,6 @@ void gamemanger::clearPlayingdata()
 	PlayingData_monster.monster_status.clear();
 	PlayingData_map.character_coordinate.clear();
 	PlayingData_map.monster_coordinate.clear();
-	PlayingData_map.door_coordinate.clear();
 	delete[] PlayingData_map.body;
 	delete[] PlayingData_map.sight;
 }
