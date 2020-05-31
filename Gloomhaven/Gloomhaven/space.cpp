@@ -56,11 +56,9 @@ void gamemanger::temp_function(std::string character_txtname, std::string monste
 }
 void gamemanger::load_file()
 {
-	std::cout << "讀取角色檔案中~~" << std::endl;
 	load_character();
 	std::cout << "角色讀取結束" << std::endl;
 
-	std::cout << "讀取怪物檔案中~~" << std::endl;
 	load_monster();
 	std::cout << "怪物讀取結束" << std::endl;
 }
@@ -534,7 +532,7 @@ void gamemanger::characterANDskill()
 ///////////////////////////////play game
 void gamemanger::play_game()
 {
-	std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
+	//std::cout << "玩遊戲中~這太好玩了吧" << std::endl;
 	//設定起始位置
 	set_startpos();
 	set_monster_active();
@@ -1642,6 +1640,8 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 
 void gamemanger::hero_takedamage(char monster_icon,char hero_icon, int damage)
 {
+	if (damage < 0)//負攻擊修正
+		damage = 0;
 	for (int i=0;i<playingData_hero.hero_amount;i++)
 	{
 		if (hero_icon==playingData_hero.hero_status[i].icon)
@@ -1664,6 +1664,8 @@ void gamemanger::hero_takedamage(char monster_icon,char hero_icon, int damage)
 void gamemanger::monster_takedamage(char monster_icon, char character_icon, int damage)
 {
 	//A attack a 3 damage, a shield 1, a remain 12 hp
+	if (damage < 0)//負攻擊修正
+		damage = 0;
 	std::cout << character_icon << " attack " << monster_icon << ' ' << damage << " damage, " << monster_icon << " shield " << Monster[monster_icon].round_gain.shield_gain << ", " << monster_icon << " remain ";
 	if (Monster[monster_icon].round_gain.shield_gain<damage)
 	{
