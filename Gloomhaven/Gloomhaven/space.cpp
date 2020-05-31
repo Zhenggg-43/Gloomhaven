@@ -554,7 +554,6 @@ void gamemanger::play_game()
 	{
 		std::cout << "character win~" << std::endl;
 	}
-
 	clearPlayingdata();
 }
 void gamemanger::print_round()
@@ -1398,6 +1397,8 @@ void gamemanger::hero_action__deal(int type,int power,int &attack_power,bool &at
 }
 void gamemanger::hero_takedamage(char monster_icon,char hero_icon, int damage)
 {
+	if (damage < 0)//攻擊為負數修正
+		damage = 0;
 	for (int i=0;i<playingData_hero.hero_amount;i++)
 	{
 		if (hero_icon==playingData_hero.hero_status[i].icon)
@@ -1420,6 +1421,8 @@ void gamemanger::hero_takedamage(char monster_icon,char hero_icon, int damage)
 void gamemanger::monster_takedamage(char monster_icon, char character_icon, int damage)
 {
 	//A attack a 3 damage, a shield 1, a remain 12 hp
+	if (damage < 0)//攻擊為負數修正
+		damage = 0;
 	std::cout << character_icon << " attack " << monster_icon << ' ' << damage << " damage, " << monster_icon << " shield " << Monster[monster_icon].round_gain.shield_gain << ", " << monster_icon << " remain ";
 	if (Monster[monster_icon].round_gain.shield_gain<damage)
 	{
@@ -1577,7 +1580,10 @@ void gamemanger::monster_action(const char &icon)//敵人行動
 				else
 				{
 					std::cout << icon << " lock " << target << " in distance 1" << std::endl;
-					hero_takedamage(icon, target, Monster[icon].power + Monster[icon].round_gain.power_gain);
+					int temp_d = Monster[icon].power + Monster[icon].round_gain.power_gain;
+					if (temp_d < 0)
+						temp_d = 0;
+					hero_takedamage(icon, target, temp_d);
 				}
 			}
 			else//遠程
@@ -1626,7 +1632,10 @@ void gamemanger::monster_action(const char &icon)//敵人行動
 				else
 				{
 					std::cout << icon << " lock " << target << " in distance " << nearest_d << std::endl;
-					hero_takedamage(icon, target, Monster[icon].power + Monster[icon].round_gain.power_gain);
+					int temp_d = Monster[icon].power + Monster[icon].round_gain.power_gain;//攻擊為負數修正
+					if (temp_d < 0)
+						temp_d = 0;
+					hero_takedamage(icon, target, temp_d);
 				}
 			}
 
@@ -1761,6 +1770,7 @@ void gamemanger::clearPlayingdata()
 	PlayingData_monster.monster_status.clear();
 	PlayingData_map.character_coordinate.clear();
 	PlayingData_map.monster_coordinate.clear();
+	PlayingData_map.door_coordinate.clear();
 	delete[] PlayingData_map.body;
 	delete[] PlayingData_map.sight;
 }
