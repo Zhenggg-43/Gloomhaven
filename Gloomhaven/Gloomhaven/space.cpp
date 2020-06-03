@@ -1426,6 +1426,33 @@ void gamemanger::print_check()
 	}
 	PlayingData_monster.printcheck(active_monster);
 }
+int gamemanger::find_secagility(char icon)
+{
+	int sec_agility;
+	for (int j = 0; j < playingData_hero.hero_amount; j++)
+	{
+		if (icon == playingData_hero.hero_status[j].icon)
+		{
+			for (int k = 0; k < character_file.character_amount; k++)
+			{
+				if (playingData_hero.hero_status[j].name == character_file.name[k])
+				{
+					for (int l = 0; l < character_file.deck_amount[k]; l++)
+					{
+						if (playingData_hero.hero_status[j].action_card[1] == character_file.deck[k][l].card_index)
+						{
+							sec_agility = character_file.deck[k][l].agility;
+							return sec_agility;
+							break;
+						}
+					}
+					break;
+				}
+			}
+			break;
+		}
+	}
+}
 void gamemanger::monster_action(const char& icon)//敵人行動
 {
 	Monster[icon].round_gain.shield_gain = 0;
@@ -1456,6 +1483,15 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 									fastest = round.agility[i];
 									target = temp_c;
 								}
+								else if (round.agility[i] == fastest)//比較第二張牌
+								{
+									int sec_agility = find_secagility(temp_c);
+									int target_sec_agility = find_secagility(target);
+									if (sec_agility < target_sec_agility)
+									{
+										target = temp_c;
+									}
+								}
 							}
 						}
 					}
@@ -1473,6 +1509,15 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 								{
 									fastest = round.agility[i];
 									target = temp_c;
+								}
+								else if (round.agility[i] == fastest)//比較第二張牌
+								{
+									int sec_agility = find_secagility(temp_c);
+									int target_sec_agility = find_secagility(target);
+									if (sec_agility < target_sec_agility)
+									{
+										target = temp_c;
+									}
 								}
 							}
 						}
@@ -1492,6 +1537,15 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 									fastest = round.agility[i];
 									target = temp_c;
 								}
+								else if (round.agility[i] == fastest)//比較第二張牌
+								{
+									int sec_agility = find_secagility(temp_c);
+									int target_sec_agility = find_secagility(target);
+									if (sec_agility < target_sec_agility)
+									{
+										target = temp_c;
+									}
+								}
 							}
 						}
 					}
@@ -1509,6 +1563,15 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 								{
 									fastest = round.agility[i];
 									target = temp_c;
+								}
+								else if (round.agility[i] == fastest)//比較第二張牌
+								{
+									int sec_agility = find_secagility(temp_c);
+									int target_sec_agility = find_secagility(target);
+									if (sec_agility < target_sec_agility)
+									{
+										target = temp_c;
+									}
 								}
 							}
 						}
@@ -1556,6 +1619,15 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 										{
 											fastest = round.agility[j];//agility
 											target = playingData_hero.hero_status[i].icon;//icon
+										}
+										else if (round.agility[j] == fastest)//比較第二張牌
+										{
+											int sec_agiliry = find_secagility(playingData_hero.hero_status[i].icon);
+											int target_sec_agiliry = find_secagility(target);
+											if (sec_agiliry < target_sec_agiliry)
+											{
+												target = playingData_hero.hero_status[i].icon;//icon
+											}
 										}
 									}
 								}
@@ -1727,6 +1799,10 @@ void gamemanger::deal_nextround()//處理每一輪攻擊的重製例如判斷死亡
 	for (int i=0;i<playingData_hero.hero_amount;i++)//清空所有英雄的護甲值
 	{
 		playingData_hero.hero_status[i].shield = 0;
+	}
+	for (auto &mon : PlayingData_monster.monster_status)
+	{
+		mon.round_gain.shield_gain = 0;
 	}
 }
 void gamemanger::set_startpos() 

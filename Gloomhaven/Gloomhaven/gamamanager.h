@@ -120,6 +120,7 @@ public:
 	void hero_action(char&);//玩家移動
 	void hero_action__deal(int,int,int&,bool&,char&);
 	void print_check();
+	int find_secagility(char);
 	void monster_action(const char&);//敵人移動
 	void deal_nextround();//每次行動玩需變動的事項例如判斷死亡之類的
 
