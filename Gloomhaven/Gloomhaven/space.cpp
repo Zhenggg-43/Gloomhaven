@@ -653,6 +653,7 @@ void gamemanger::hero_turn()
 								{
 									moved = false;
 									playingData_hero.hero_status[i].action_card[0] = -1;
+									playingData_hero.hero_status[i].action_card[1] = 0;
 									round.canmove_icon.erase(round.canmove_icon.begin() + j);
 									round.action_creature_icon.push_back(playingData_hero.hero_status[i].icon);
 									round.agility.push_back(99);
@@ -1039,6 +1040,19 @@ void gamemanger::round_action()
 	}
 	deal_nextround();
 }
+std::string print_card(int input)
+{
+	if (input ==Action::Move)
+		return "Move ";
+	else if (input == Action::Attack)
+		return "Attack ";
+	else if (input==Action::Heal)
+		return  "Heal ";
+	else if (input == Action::Shield)
+		return  "Shield ";
+	else if (input == Action::Range)
+		return  "Range ";
+}
 void gamemanger::hero_action(char &hero)//玩家行動
 {
 	for (int i=0;i<playingData_hero.hero_amount;i++)
@@ -1049,6 +1063,12 @@ void gamemanger::hero_action(char &hero)//玩家行動
 			{
 				std::cout << hero << "'s turn: card " << playingData_hero.hero_status[i].action_card[0] << std::endl;
 				int b; bool a; hero_action__deal(3, 2, b, a, hero);
+				std::cout << hero << "'s discard :";
+				for (int j = 0; j < playingData_hero.hero_status[i].deadwood.size(); j++)
+				{
+					std::cout << " " << playingData_hero.hero_status[i].deadwood[j];
+				}
+				std::cout << std::endl << "請輸入你要丟棄的卡牌 :";
 				int temp_i=0;
 				bool have_card = false;
 				while (std::cin >> temp_i)
@@ -1084,6 +1104,29 @@ void gamemanger::hero_action(char &hero)//玩家行動
 			else
 			{
 				std::cout << hero << "'s turn: card " << playingData_hero.hero_status[i].action_card[0] << " " << playingData_hero.hero_status[i].action_card[1] << std::endl;
+				//(輸出當前選擇卡片的上下效果)
+				std::cout << "card " << playingData_hero.hero_status[i].action_card[0] << " :";
+				for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_type.size(); j++)
+				{
+					std::cout << " " << print_card(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_type[j]) << " " << character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].up_effect.card_power[j];
+				}
+				std::cout << " <-> ";
+				for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_type.size(); j++)
+				{
+					std::cout << " " << print_card(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_type[j]) << " " << character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[0]].down_effect.card_power[j];
+				}
+				std::cout << std::endl << "card " << playingData_hero.hero_status[i].action_card[1] << " :";
+				for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_type.size(); j++)
+				{
+					std::cout << " " << print_card(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_type[j]) << " " << character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].up_effect.card_power[j];
+				}
+				std::cout << " <-> ";
+				for (int j = 0; j < character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_type.size(); j++)
+				{
+					std::cout << " " << print_card(character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_type[j]) << " " << character_file[playingData_hero[hero].name][playingData_hero.hero_status[i].action_card[1]].down_effect.card_power[j];
+				}
+				std::cout<<std::endl;
+				//
 				std::string temp_s;
 				bool attack = false;
 				int attack_power = 0;
@@ -1695,7 +1738,7 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 	}
 	else//沒有 將牌移至棄牌堆
 	{
-		Monster[icon].discard.push_back(Monster[icon].drew_card);
+		//Monster[icon].discard.push_back(Monster[icon].drew_card);
 
 		for (std::vector<int>::iterator hand = PlayingData_monster[icon].hand.begin(); hand < Monster[icon].hand.end(); hand++)
 		{
