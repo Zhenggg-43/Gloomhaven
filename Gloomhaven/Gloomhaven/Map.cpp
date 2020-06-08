@@ -189,6 +189,7 @@ void map_data::Set_Characterpos(int character_amount)
 							if ((x_selected == pos_start_T[b][1]) && (y_selected - 1 == pos_start_T[b][0]))
 							{
 								y_selected --;
+								break;
 							}
 						}
 					}
@@ -202,6 +203,7 @@ void map_data::Set_Characterpos(int character_amount)
 							if ((x_selected - 1 == pos_start_T[b][1]) && (y_selected == pos_start_T[b][0]))
 							{
 								x_selected--;
+								break;
 							}
 						}
 					}
@@ -215,6 +217,7 @@ void map_data::Set_Characterpos(int character_amount)
 							if ((x_selected == pos_start_T[b][1]) && (y_selected + 1 == pos_start_T[b][0]))
 							{
 								y_selected ++;
+								break;
 							}
 						}
 					}
@@ -228,6 +231,7 @@ void map_data::Set_Characterpos(int character_amount)
 							if ((x_selected + 1 == pos_start_T[b][1]) && (y_selected == pos_start_T[b][0]))
 							{
 								x_selected++;
+								break;
 							}
 						}
 					}
