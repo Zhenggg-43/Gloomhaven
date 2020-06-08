@@ -1613,7 +1613,7 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 							{
 								for (int j = 0; j < round.action_creature_icon.size(); j++)//比敏捷
 								{
-									if (round.action_creature_icon[j] == playingData_hero.hero_status[j].icon)
+									if (round.action_creature_icon[j] == playingData_hero.hero_status[i].icon)
 									{
 										if (round.agility[j] < fastest)
 										{
