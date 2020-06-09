@@ -1,4 +1,4 @@
-3
+2
 brute 14 6
 8
 0 05 attack 4 - shield 2
@@ -17,6 +17,3 @@ scoundrel 8 5
 3 38 attack 2 attack 2 attack 2 - move 4
 4 44 attack 7 - move 2 attack 3 move 2
 5 68 attack 4 range 4 - heal 3
-chenzone 1 1
-1
-0 01 attack 1 - move 1

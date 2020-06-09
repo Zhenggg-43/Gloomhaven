@@ -30,7 +30,7 @@ bool gamemanger::whether_play()
 			return false;
 		else
 		{
-			std::cout << "智障??輸入Play還是Exit好嗎??" << std::endl;
+			std::cout << "輸入錯誤請輸入play 或是 exit" << std::endl;
 		}
 		temp.clear();
 	}
@@ -398,7 +398,7 @@ void gamemanger::load_map()
 
 	//std::cout <<std::endl<< PlayingData_monster.monster_amount<<std::endl;
 	//PlayingData_monster.printAllmonster();
-	std::cout << "你輸入了地圖你真棒!!" << std::endl;
+	//std::cout << "你輸入了地圖你真棒!!" << std::endl;
 }
 void gamemanger::set_door_amount()
 {
@@ -575,7 +575,6 @@ void gamemanger::hero_turn()
 		}
 	}
 	//////////
-	std::cout << "請輸入角色與卡牌" << std::endl;//回合提示
 	std::stringstream ss;
 	std::string temp_s="";
 	int temp_i = 0;
@@ -588,6 +587,10 @@ void gamemanger::hero_turn()
 	{
 		round.canmove_icon.push_back(playingData_hero.hero_status[i].icon);
 	}
+	if (round.canmove_icon.size()!=0)
+	{
+		std::cout << "請輸入角色與卡牌" << std::endl;//回合提示
+	}
 	//(看CANMOVEICON有沒有問題)
 	/*for (int i=0;i<round.canmove_icon.size();i++)
 	{
@@ -595,8 +598,9 @@ void gamemanger::hero_turn()
 	}
 	std::cout << std::endl;*/
 	//
-	while (std::getline(std::cin,temp_s))
+	while (round.canmove_icon.size() != 0&&std::getline(std::cin,temp_s))
 	{
+		
 		bool exist = false;
 		ss.str("");
 		ss.clear();
@@ -819,7 +823,7 @@ void gamemanger::set_order()//依照敏捷設定順序
 		temp_c_1.clear();
 	}
 	std::sort(temp_c_2.begin(), temp_c_2.end());
-	for (int i=0; i < round.action_creature_icon.size()-1; i++)
+	for (int i=0; i < (int(round.action_creature_icon.size())-1); i++)
 	{
 		for (int j = 0; j < round.action_creature_icon.size()-i-1; j++)
 		{
@@ -900,14 +904,14 @@ void gamemanger::set_order()//依照敏捷設定順序
 				else if ((temp_c_2[j][1] <= 'z' && temp_c_2[j][1] >= 'a') && (temp_c_2[j + 1][1] <= 'z' && temp_c_2[j + 1][1] >= 'a'))
 				{
 					std::string temp_s_1, temp_s_2;
-					for (int l = 0; l < PlayingData_monster.monster_amount; l++)
+					for (int l = 0; l < PlayingData_monster.monster_status.size(); l++)
 					{
 						if (temp_c_2[j][1] == PlayingData_monster.monster_status[l].icon)
 						{
 							temp_s_1 = PlayingData_monster.monster_status[l].name;
 						}
 					}
-					for (int l = 0; l < PlayingData_monster.monster_amount; l++)
+					for (int l = 0; l < PlayingData_monster.monster_status.size(); l++)
 					{
 						if (temp_c_2[j + 1][1] == PlayingData_monster.monster_status[l].icon)
 						{
@@ -1728,7 +1732,7 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 		}
 	}
 	//處理手牌與棄牌
-	if (Monster[icon].cards[card_index].suffle_sign == 1)//有重洗標誌將牌組重製????????????????????????????????/
+	if (PlayingData_monster[icon].cards[card_index].suffle_sign == 1)//有重洗標誌將牌組重製
 	{
 		Monster[icon].hand.clear();
 		for (int i = 0; i < Monster[icon].cards.size(); i++)
@@ -1740,11 +1744,11 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 	{
 		//Monster[icon].discard.push_back(Monster[icon].drew_card);
 
-		for (std::vector<int>::iterator hand = PlayingData_monster[icon].hand.begin(); hand < Monster[icon].hand.end(); hand++)
+		for (std::vector<int>::iterator hand_iter = PlayingData_monster[icon].hand.begin(); hand_iter < Monster[icon].hand.end(); hand_iter++)
 		{
-			if (*hand == Monster[icon].drew_card)
+			if (*hand_iter == Monster[icon].drew_card)
 			{
-				Monster[icon].hand.erase(hand);//清除
+				Monster[icon].hand.erase(hand_iter);//清除
 				break;
 			}
 		}

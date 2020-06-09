@@ -375,6 +375,7 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 				body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
 				body[Y][X] = icon;
 				monster_coordinate[index].y = Y;
+				monster_coordinate[index].x = X;
 			}
 		}
 		else if (movement[i] == 'a')
@@ -401,6 +402,7 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 			{
 				body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
 				body[Y][X] = icon;
+				monster_coordinate[index].y = Y;
 				monster_coordinate[index].x = X;
 			}
 		}
@@ -429,6 +431,7 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 				body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
 				body[Y][X] = icon;
 				monster_coordinate[index].y = Y;
+				monster_coordinate[index].x = X;
 			}
 		}
 		else if (movement[i] == 'd')
@@ -455,6 +458,7 @@ bool map_data::creature_Move(const int index,const char icon,const std::string m
 			{
 				body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
 				body[Y][X] = icon;
+				monster_coordinate[index].y = Y;
 				monster_coordinate[index].x = X;
 			}
 		}
@@ -558,7 +562,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						//body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -571,7 +575,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						//body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -600,7 +604,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						//body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -613,7 +617,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						//body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -646,7 +650,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						//body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -659,7 +663,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						//body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -688,7 +692,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						//body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -701,7 +705,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						//body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -736,5 +740,6 @@ void map_data::character_killed(int index)
 }
 void map_data::monster_killed(int index)
 {
+	//cout << monster_coordinate[index].y << monster_coordinate[index].x <<"*********************"<< endl;
 	body[monster_coordinate[index].y][monster_coordinate[index].x] = '1';
 }
