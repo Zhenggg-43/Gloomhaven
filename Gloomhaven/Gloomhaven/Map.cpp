@@ -558,7 +558,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -571,7 +571,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -582,6 +582,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 					ypos++;
 				ytmp = ypos;
 			}
+			//m<0
 			else
 			{
 				bool singular_dot = 0;//經過交叉點
@@ -600,7 +601,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -613,7 +614,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = character_coordinate[C_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -646,7 +647,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -659,7 +660,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -688,7 +689,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ytmp;j <= ypos;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;
@@ -701,7 +702,7 @@ bool map_data::visible(const int C_index, const  int M_index)
 						ypos = monster_coordinate[M_index].y + 1;
 					for (int j = ypos;j <= ytmp;j++)
 					{
-						/*body[j - 1][xpos - 1] = 'T';*/
+						body[j - 1][xpos - 1] = 'T';
 						if (body[j - 1][xpos - 1] == '0')
 						{
 							return 0;

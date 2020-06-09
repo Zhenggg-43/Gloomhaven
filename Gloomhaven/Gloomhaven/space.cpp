@@ -537,6 +537,8 @@ void gamemanger::play_game()
 	set_startpos();
 	set_monster_active();
 	//////////////////
+	Map.visible(0, 0);
+	Map.Print_Allmap();
 	std::cin.ignore();
 	while (gameover())
 	{
@@ -1671,6 +1673,10 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 											{
 												target = playingData_hero.hero_status[i].icon;//icon
 											}
+											//else if (sec_agiliry == target_sec_agiliry)//比ICON
+											//{
+											//	if(playingData_hero.hero_status[i].icon<target)
+											//}
 										}
 									}
 								}
