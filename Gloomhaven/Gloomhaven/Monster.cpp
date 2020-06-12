@@ -91,6 +91,10 @@ void All_monster::printmonstercard(char icon, int card_Vecindex)
 			std::cout << monster.name << ' ';//名稱
 
 			auto card = monster.cards[card_Vecindex];//卡牌//////////////////
+			if (card.agility<10)
+			{
+				cout << "0";
+			}
 			cout << card.agility << ' ';//敏捷值
 			for (auto skill : card.skill)//技能
 			{

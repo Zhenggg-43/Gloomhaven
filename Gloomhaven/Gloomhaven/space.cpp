@@ -399,6 +399,14 @@ void gamemanger::load_map()
 	//std::cout <<std::endl<< PlayingData_monster.monster_amount<<std::endl;
 	//PlayingData_monster.printAllmonster();
 	//std::cout << "你輸入了地圖你真棒!!" << std::endl;
+
+	for (int index_ = 0; index_ < Monster.monster_amount; index_++)
+	{
+		for (int j = 0; j < Monster.monster_status[index_].cards.size(); j++)
+		{
+			Monster.monster_status[index_].hand.push_back(j);//設定起始手排cardVec
+		}
+	}
 }
 void gamemanger::set_door_amount()
 {
@@ -671,70 +679,86 @@ void gamemanger::hero_turn()
 					}
 					else//選擇行動的兩張手牌
 					{
-						bool havecard1=false, havecard2 = false;;
-						int temp_i=0;
-						std::stringstream temp;
-						temp << temp_s;
-						temp >> temp_i;
-						for (int j=0;j<playingData_hero.hero_status[i].hand.size();j++)
+						bool moved1 = true;
+						for (int j = 0; j < round.canmove_icon.size(); j++)
 						{
-							if (playingData_hero.hero_status[i].hand[j]==temp_i)
+							if (round.canmove_icon[j] == playingData_hero.hero_status[i].icon)
 							{
-								havecard1 = true;
-								playingData_hero.hero_status[i].action_card[0] = temp_i;
+								moved1 = false;
 							}
 						}
-						ss >> temp_i;
-						for (int j = 0; j < playingData_hero.hero_status[i].hand.size(); j++)
+						if (moved1)
 						{
-							if (playingData_hero.hero_status[i].hand[j] == temp_i)
-							{
-								havecard2 = true;
-								playingData_hero.hero_status[i].action_card[1] = temp_i;
-							}
-						}
-						if (!havecard1||!havecard2)
-						{
-							std::cout << "此角色沒有你輸入的卡牌" << std::endl;
+							std::cout << "此角色已經移動過了請輸入別的角色!" << std::endl;
+
 						}
 						else
 						{
-							if (playingData_hero.hero_status[i].action_card[0]!= playingData_hero.hero_status[i].action_card[1])
+							bool havecard1 = false, havecard2 = false;;
+							int temp_i = 0;
+							std::stringstream temp;
+							temp << temp_s;
+							temp >> temp_i;
+							for (int j = 0; j < playingData_hero.hero_status[i].hand.size(); j++)
 							{
-								bool moved = true;
-								for (int j = 0; j < round.canmove_icon.size(); j++)
+								if (playingData_hero.hero_status[i].hand[j] == temp_i)
 								{
-									if (round.canmove_icon[j] == playingData_hero.hero_status[i].icon)
-									{
-										moved = false;
-										round.canmove_icon.erase(round.canmove_icon.begin() + j);
-										round.action_creature_icon.push_back(playingData_hero.hero_status[i].icon);
-										for (int k = 0; k < character_file.character_amount; k++)
-										{
-											if (playingData_hero.hero_status[i].name == character_file.name[k])
-											{
-												for (int l = 0; l < character_file.deck_amount[k]; l++)
-												{
-													if (playingData_hero.hero_status[i].action_card[0] == character_file.deck[k][l].card_index)
-													{
-														round.agility.push_back(character_file.deck[k][l].agility);
-														break;
-													}
-												}
-												break;
-											}
-										}
-										break;
-									}
+									havecard1 = true;
+									playingData_hero.hero_status[i].action_card[0] = temp_i;
 								}
-								if (moved)
+							}
+							ss >> temp_i;
+							for (int j = 0; j < playingData_hero.hero_status[i].hand.size(); j++)
+							{
+								if (playingData_hero.hero_status[i].hand[j] == temp_i)
 								{
-									std::cout << "此角色已經移動過了請輸入別的角色!" << std::endl;
+									havecard2 = true;
+									playingData_hero.hero_status[i].action_card[1] = temp_i;
 								}
+							}
+							if (!havecard1 || !havecard2)
+							{
+								std::cout << "此角色沒有你輸入的卡牌" << std::endl;
 							}
 							else
 							{
-								std::cout << "你輸入了重複卡牌請重新輸入" << std::endl;
+								if (playingData_hero.hero_status[i].action_card[0] != playingData_hero.hero_status[i].action_card[1])
+								{
+									bool moved = true;
+									for (int j = 0; j < round.canmove_icon.size(); j++)
+									{
+										if (round.canmove_icon[j] == playingData_hero.hero_status[i].icon)
+										{
+											moved = false;
+											round.canmove_icon.erase(round.canmove_icon.begin() + j);
+											round.action_creature_icon.push_back(playingData_hero.hero_status[i].icon);
+											for (int k = 0; k < character_file.character_amount; k++)
+											{
+												if (playingData_hero.hero_status[i].name == character_file.name[k])
+												{
+													for (int l = 0; l < character_file.deck_amount[k]; l++)
+													{
+														if (playingData_hero.hero_status[i].action_card[0] == character_file.deck[k][l].card_index)
+														{
+															round.agility.push_back(character_file.deck[k][l].agility);
+															break;
+														}
+													}
+													break;
+												}
+											}
+											break;
+										}
+									}
+									if (moved)
+									{
+										std::cout << "此角色已經移動過了請輸入別的角色!" << std::endl;
+									}
+								}
+								else
+								{
+									std::cout << "你輸入了重複卡牌請重新輸入" << std::endl;
+								}
 							}
 						}
 					}
@@ -762,7 +786,7 @@ void gamemanger::monster_turn()
 {
 	if (Flag_DebugMode)
 	{
-		for (int i = 0;i < active_monster_amount;i++)
+		for (int i = 0;i < active_monster.size();i++)
 		{
 			char acting_icon = active_monster[i];
 			Monster[acting_icon].drew_card = Monster[acting_icon].hand[0];
@@ -773,7 +797,7 @@ void gamemanger::monster_turn()
 	else
 	{
 		std::string str_mon;
-		for (int i = 0;i < active_monster_amount;i++)
+		for (int i = 0;i < active_monster.size();i++)
 		{
 			str_mon.push_back(active_monster[i]);
 		}
@@ -1731,6 +1755,7 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 			}
 		}
 	}
+
 	//處理手牌與棄牌
 	if (PlayingData_monster[icon].cards[card_index].suffle_sign == 1)//有重洗標誌將牌組重製
 	{
@@ -1739,6 +1764,7 @@ void gamemanger::monster_action(const char& icon)//敵人行動
 		{
 			Monster[icon].hand.push_back(i);
 		}
+
 	}
 	else//沒有 將牌移至棄牌堆
 	{
@@ -1810,6 +1836,88 @@ void gamemanger::monster_takedamage(char monster_icon, char character_icon, int 
 		PlayingData_monster.monster_amount--;
 		std::cout << monster_icon << " is killed!!\n";
 		PlayingData_map.Print_Sightedmap();
+		/////////////////////////處理手牌/////////////////////////////////
+		bool if_moved = 0;
+		for (int i = 0; i <= Monster[monster_icon].hand.size(); i++)
+		{
+			if (i == Monster[monster_icon].hand.size())//以行動
+			{
+				if_moved = 1;
+				break;
+			}
+			else
+			{
+				if (Monster[monster_icon].hand[i] == Monster[monster_icon].drew_card)
+				{
+					break;
+				}
+			}
+		}
+		if (!if_moved)//為行動 更新手排
+		{
+			int card_index = Monster[monster_icon].drew_card;
+			if (PlayingData_monster[monster_icon].cards[card_index].suffle_sign == 1)//有重洗標誌將牌組重製
+			{
+				Monster[monster_icon].hand.clear();
+				for (int i = 0; i < Monster[monster_icon].cards.size(); i++)
+				{
+					Monster[monster_icon].hand.push_back(i);
+				}
+
+			}
+			else//沒有 將牌移至棄牌堆
+			{
+				//Monster[icon].discard.push_back(Monster[icon].drew_card);
+
+				for (std::vector<int>::iterator hand_iter = PlayingData_monster[monster_icon].hand.begin(); hand_iter < Monster[monster_icon].hand.end(); hand_iter++)
+				{
+					if (*hand_iter == Monster[monster_icon].drew_card)
+					{
+						Monster[monster_icon].hand.erase(hand_iter);//清除
+						break;
+					}
+				}
+			}
+		}
+		//更新門後怪物手排
+		if (active_monster.empty())
+		{
+			for (int m = 0; m < Monster.monster_status.size(); m++)
+			{
+				if (!Monster.monster_status[m].ifdead)//死亡不更新
+				{
+					if (Monster[monster_icon].name == Monster.monster_status[m].name)
+					{
+						Monster.monster_status[m].hand = Monster[monster_icon].hand;
+					}
+				}
+			}
+		}
+		else
+		{
+			bool lastone = 1;
+			for (int i = 0; i < active_monster.size(); i++)
+			{
+				if (Monster[active_monster[i]].name == Monster[monster_icon].name)
+				{
+					lastone = 0;
+					break;
+				}
+			}
+			if (lastone)
+			{
+				for (int m = 0; m < Monster.monster_status.size(); m++)
+				{
+					if (!Monster.monster_status[m].ifdead)//死亡不更新
+					{
+						if (Monster[monster_icon].name == Monster.monster_status[m].name)
+						{
+							Monster.monster_status[m].hand = Monster[monster_icon].hand;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 void gamemanger::remove_dead_hero(char hero_icon)
@@ -1851,6 +1959,7 @@ void gamemanger::deal_nextround()//處理每一輪攻擊的重製例如判斷死亡
 	{
 		mon.round_gain.shield_gain = 0;
 	}
+
 }
 void gamemanger::set_startpos() 
 {
@@ -1875,11 +1984,6 @@ void gamemanger::set_monster_active()//Map set sight 之後要用!!!!!!!!!!
 			{
 				active_monster_amount++;
 				active_monster.push_back(Monster.monster_status[i].icon);//紀錄被激活怪物
-
-				for (int j = 0;j < Monster.monster_status[i].cards.size();j++)
-				{
-					Monster.monster_status[i].hand.push_back(j);//設定起始手排cardVec
-				}
 			}
 		}
 	}
@@ -1916,6 +2020,9 @@ void gamemanger::clearPlayingdata()
 	PlayingData_monster.monster_status.clear();
 	PlayingData_map.character_coordinate.clear();
 	PlayingData_map.monster_coordinate.clear();
+	PlayingData_map.door_coordinate.clear();
+	active_monster.clear();
+	active_monster_amount = 0;
 	delete[] PlayingData_map.body;
 	delete[] PlayingData_map.sight;
 }

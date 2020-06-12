@@ -313,6 +313,10 @@ bool map_data::character_Move(const int index ,const char icon,const std::string
 		{
 			return 0;
 		}
+		else if (sight[Y][X] == 0)
+		{
+			return 0;
+		}
 
 	}
 
@@ -723,17 +727,24 @@ bool map_data::visible(const int C_index, const  int M_index)
 
 void map_data::character_killed(int index)
 {
-	for (auto door_c : door_coordinate)
+	if (!door_coordinate.empty())
 	{
-		if (character_coordinate[index].y == door_c.y && character_coordinate[index].x == door_c.x)
+		for (auto door_c : door_coordinate)
 		{
-			body[character_coordinate[index].y][character_coordinate[index].x] = '3';
-			break;
+			if (character_coordinate[index].y == door_c.y && character_coordinate[index].x == door_c.x)
+			{
+				body[character_coordinate[index].y][character_coordinate[index].x] = '3';
+				break;
+			}
+			else
+			{
+				body[character_coordinate[index].y][character_coordinate[index].x] = '1';
+			}
 		}
-		else
-		{
-			body[character_coordinate[index].y][character_coordinate[index].x] = '1';
-		}
+	}
+	else
+	{
+		body[character_coordinate[index].y][character_coordinate[index].x] = '1';
 	}
 	//body[character_coordinate[index].y][character_coordinate[index].x] = '1';
 	character_coordinate.erase(character_coordinate.begin() + index);
